@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "B": "minecraft:blaze_rod",
+    "P": "minecraft:ender_pearl"
+  },
+  "pattern": [
+    " A ",
+    " P ",
+    " B "
+  ],
+  "result": {
+    "id": "pointportals:tuner"
+  }
+}

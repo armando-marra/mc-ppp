@@ -1,0 +1,18 @@
+{
+  "block.pointportals.teleporter": "Point-to-Point Teleporter",
+  "item.pointportals.tuner": "Phase Tuner",
+  "message.pointportals.already_linked": "This portal is already linked to another destination.",
+  "message.pointportals.cannot_self_link": "Cannot link a portal to itself!",
+  "message.pointportals.destination_obstructed": "Destination portal is obstructed!",
+  "message.pointportals.first_portal_selected": "First portal captured at [%s, %s, %s]. Select the target portal.",
+  "message.pointportals.invalid_dimension": "Target dimension is currently inaccessible.",
+  "message.pointportals.portals_linked": "Portals successfully paired! Power with Redstone to activate.",
+  "message.pointportals.portals_unlinked": "Portals successfully unlinked.",
+  "message.pointportals.source_portal_missing": "The first portal could not be found or was broken!",
+  "message.pointportals.status_active": "Teleporter paired with %s at [%s, %s, %s] (Active).",
+  "message.pointportals.status_standby": "Teleporter paired with %s at [%s, %s, %s] (Standby - requires Redstone).",
+  "message.pointportals.status_unlinked": "Teleporter is unlinked. Use a Phase Tuner to pair.",
+  "message.pointportals.tuner_cleared": "Phase Tuner memory cleared.",
+  "tooltip.pointportals.tuner_target": "Armed: Bound to %s at [%s, %s, %s]",
+  "tooltip.pointportals.tuner_unbound": "Right-click an unlinked Teleporter to begin pairing."
+}

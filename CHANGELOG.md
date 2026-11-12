@@ -7,9 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned
-- **Iteration 4**:
-  - Fabric Data Generation pipeline for blockstates, models, recipes, loot tables, and `en_us.json`.
+---
+
+## [0.0.5] - 2026-11-13
+
+### Added
+- **Fabric Data Generation Pipeline (Iteration 4)**:
+  - Implemented `PointPortalsDataGenerator` registering five specialized data providers via Fabric's Data Generation subsystem.
+  - Implemented `PointPortalsModelProvider`: programmatic generation of `blockstates/teleporter.json` mapping all 4 state permutations of `LINKED` and `POWERED`, block models (`teleporter_inactive`, `teleporter_standby`, `teleporter_active`), item models, and modern Minecraft 26.2 client item definitions (`items/teleporter.json`, `items/tuner.json`).
+  - Implemented `PointPortalsRecipeProvider`: programmatic generation of balanced shaped crafting recipes for 2x Teleporter Blocks (Obsidian, Copper Ingot, Redstone, Eye of Ender) and Phase Tuner (Amethyst Shard, Ender Pearl, Blaze Rod), with automatic recipe advancement triggers.
+  - Implemented `PointPortalsBlockLootTableProvider`: programmatic block drop self table for `TeleporterBlock` with explosion survival conditions.
+  - Implemented `PointPortalsBlockTagProvider`: programmatic tag definitions adding `pointportals:teleporter` to `minecraft:mineable/pickaxe` and `minecraft:needs_iron_tool`.
+  - Implemented `PointPortalsEnglishLangProvider`: programmatic authoritative localization provider generating complete English translations for blocks, items, tooltips, action bar HUD messages, and status inspect strings.
+  - Configured `build.gradle` copy tasks with `DuplicatesStrategy.EXCLUDE` for resource bundling and added `.cache/` to `.gitignore`.
 
 ---
 

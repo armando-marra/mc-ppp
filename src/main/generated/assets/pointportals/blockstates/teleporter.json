@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "linked=false,powered=false": {
+      "model": "pointportals:block/teleporter_inactive"
+    },
+    "linked=false,powered=true": {
+      "model": "pointportals:block/teleporter_inactive"
+    },
+    "linked=true,powered=false": {
+      "model": "pointportals:block/teleporter_standby"
+    },
+    "linked=true,powered=true": {
+      "model": "pointportals:block/teleporter_active"
+    }
+  }
+}
