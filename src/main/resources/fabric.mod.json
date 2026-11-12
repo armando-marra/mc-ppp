@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "pointportals",
+	"version": "${version}",
+	"name": "Point-to-Point Portals",
+	"description": "Immersive, balanced 1-to-1 fast-travel portals powered by Redstone.",
+	"authors": [
+		"Antigravity Developer"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/"
+	},
+	"license": "MIT",
+	"icon": "assets/pointportals/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.project.pointportals.PointPortals"
+		],
+		"client": [
+			"com.project.pointportals.client.PointPortalsClient"
+		],
+		"fabric-datagen": [
+			"com.project.pointportals.datagen.PointPortalsDataGenerator"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": ">=26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
