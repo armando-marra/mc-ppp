@@ -1,5 +1,6 @@
 package com.project.pointportals;
 
+import com.project.pointportals.registry.ModBlockEntities;
 import com.project.pointportals.registry.ModBlocks;
 import com.project.pointportals.registry.ModDataComponents;
 import com.project.pointportals.registry.ModItems;
@@ -18,6 +19,7 @@ public class PointPortals implements ModInitializer {
 
 		ModDataComponents.initialize();
 		ModBlocks.initialize();
+		ModBlockEntities.initialize();
 		ModItems.initialize();
 
 		LOGGER.info("Point-to-Point Portals registration complete");

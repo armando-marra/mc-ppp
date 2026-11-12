@@ -8,13 +8,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- **Iteration 2**:
-  - `TeleporterBlockEntity` implementation with persistent NBT serialization.
-  - Safe Redstone power detection (`neighborChanged`) and synchronized twin unlinking.
 - **Iteration 3**:
   - Cross-dimensional teleportation mechanics and anti-loop arrival cooldowns.
+  - Safe destination positioning and obstruction avoidance.
 - **Iteration 4**:
   - Fabric Data Generation pipeline for blockstates, models, recipes, loot tables, and `en_us.json`.
+
+---
+
+## [0.0.3] - 2026-11-12
+
+### Added
+- **BlockEntity & Synchronization Mechanics (Iteration 2)**:
+  - Registered `pointportals:teleporter` (`BlockEntityType<TeleporterBlockEntity>`) in `ModBlockEntities`.
+  - Implemented `TeleporterBlockEntity` with modern `ValueInput` and `ValueOutput` NBT persistence and `ClientboundBlockEntityDataPacket` client synchronization.
+  - Implemented chunk-unload safe destruction lifecycle: replaced generic `setRemoved()` hook with `preRemoveSideEffects()`, ensuring chunk unloading never unlinks twin portals.
+  - Implemented self-healing bidirectional link verification (`verifyAndSyncLink()`) ensuring strict 1-to-1 reciprocity and automatic unlinking if a twin portal is destroyed, replaced, or desynchronized.
+  - Added periodic server tick (`serverTick`) on `TeleporterBlock` every 40 ticks (2 seconds) to audit link integrity.
+  - Implemented dynamic Redstone power detection (`neighborChanged` & `onPlace`) with audio feedback (`beacon.activate` / `beacon.deactivate`).
+  - Added Redstone Comparator analog output signal support: `0` when unlinked, `7` when in standby, and `15` when fully powered/active.
+  - Added client-side visual particles and ambient sound loop (`animateTick`) displaying rising portal particles when active and faint enchantment glimmers in standby.
+  - Added right-click teleporter status inspection (`useWithoutItem`) providing action-bar feedback on pairing status and target coordinates.
+  - Enhanced `TunerItem` to safely load target chunk on pairing completion, resolving link failures for distant or cross-dimension portals.
+  - Added English localization keys for portal status messages in `en_us.json`.
 
 ---
 
