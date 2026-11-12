@@ -8,11 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- **Iteration 3**:
-  - Cross-dimensional teleportation mechanics and anti-loop arrival cooldowns.
-  - Safe destination positioning and obstruction avoidance.
 - **Iteration 4**:
   - Fabric Data Generation pipeline for blockstates, models, recipes, loot tables, and `en_us.json`.
+
+---
+
+## [0.0.4] - 2026-11-12
+
+### Added
+- **Cross-Dimensional Teleportation & Anti-Loop Safeguards (Iteration 3)**:
+  - Implemented cross-dimensional teleportation via `entity.teleportTo` in `TeleporterBlockEntity`.
+  - Implemented anti-loop ping-pong protection using native `portalCooldown`: applies 60 ticks (3 seconds) cooldown on departure, and continuously resets cooldown to 40 ticks while standing on the destination teleporter, preventing unwanted return teleportation until the entity steps off.
+  - Implemented immediate stepping activation via `TeleporterBlock.stepOn` and continuous standing detection via `serverTick` with AABB bounding box collision.
+  - Added obstruction and hazard verification: verifies destination `standPos` and `headPos` for full-block collisions, `Blocks.LAVA`, `Blocks.FIRE`, and `Blocks.SOUL_FIRE`.
+  - Added audio and visual effects: `SoundEvents.ENDERMAN_TELEPORT` and portal particles on departure/arrival, with `SoundEvents.DISPENSER_FAIL` and action-bar notification when obstructed.
+  - Added passenger and vehicle safeguards: disallows teleportation for riding passengers or vehicles with riders to prevent entity desynchronization across dimensions.
+  - Audited and certified by dedicated `qa-build-verifier` subagent with full scorecard approval.
 
 ---
 

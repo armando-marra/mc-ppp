@@ -4,9 +4,13 @@ import com.project.pointportals.block.TeleporterBlock;
 import com.project.pointportals.component.PortalTarget;
 import com.project.pointportals.registry.ModBlockEntities;
 import com.project.pointportals.registry.ModBlocks;
+import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -14,15 +18,20 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Relative;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import org.jspecify.annotations.Nullable;
 
 /**
- * BlockEntity managing persistent twin link data and synchronization for Teleporter blocks.
+ * BlockEntity managing persistent twin link data, synchronization, and teleportation for Teleporter blocks.
  */
 public class TeleporterBlockEntity extends BlockEntity {
 	private @Nullable PortalTarget twinTarget;
@@ -144,6 +153,117 @@ public class TeleporterBlockEntity extends BlockEntity {
 	}
 
 	/**
+	 * Executes safe cross-dimensional teleportation for an entity standing on the portal.
+	 */
+	public boolean teleportEntity(ServerLevel sourceLevel, BlockPos sourcePos, BlockState sourceState, Entity entity) {
+		if (entity.level().isClientSide() || entity.isPassenger() || entity.isVehicle()) {
+			return false;
+		}
+
+		if (entity.isOnPortalCooldown()) {
+			entity.setPortalCooldown(40);
+			return false;
+		}
+
+		if (!sourceState.getValue(TeleporterBlock.LINKED) || !sourceState.getValue(TeleporterBlock.POWERED)) {
+			return false;
+		}
+
+		if (this.twinTarget == null) {
+			this.clearAndReset(true);
+			return false;
+		}
+
+		MinecraftServer server = sourceLevel.getServer();
+		if (server == null) {
+			return false;
+		}
+
+		ServerLevel destLevel = server.getLevel(this.twinTarget.dimension());
+		if (destLevel == null) {
+			this.clearAndReset(true);
+			return false;
+		}
+
+		BlockPos destPos = this.twinTarget.pos();
+
+		// Safely resolve the destination chunk
+		destLevel.getChunk(destPos);
+
+		BlockState destState = destLevel.getBlockState(destPos);
+		if (!destState.is(ModBlocks.TELEPORTER)) {
+			this.clearAndReset(true);
+			return false;
+		}
+
+		BlockEntity destBe = destLevel.getBlockEntity(destPos);
+		if (!(destBe instanceof TeleporterBlockEntity destTeleporter)) {
+			this.clearAndReset(true);
+			return false;
+		}
+
+		PortalTarget reciprocalTarget = destTeleporter.getTwinTarget();
+		if (reciprocalTarget == null ||
+			!reciprocalTarget.dimension().equals(sourceLevel.dimension()) ||
+			!reciprocalTarget.pos().equals(sourcePos)) {
+			this.clearAndReset(true);
+			return false;
+		}
+
+		// Destination obstruction and hazard checks
+		BlockPos standPos = destPos.above();
+		BlockPos headPos = destPos.above(2);
+		BlockState standState = destLevel.getBlockState(standPos);
+		BlockState headState = destLevel.getBlockState(headPos);
+
+		if (standState.is(Blocks.LAVA) || headState.is(Blocks.LAVA) ||
+			standState.is(Blocks.FIRE) || standState.is(Blocks.SOUL_FIRE) ||
+			standState.isCollisionShapeFullBlock(destLevel, standPos) ||
+			headState.isCollisionShapeFullBlock(destLevel, headPos)) {
+			sourceLevel.playSound(null, sourcePos, SoundEvents.DISPENSER_FAIL, SoundSource.BLOCKS, 1.0F, 0.6F);
+			if (entity instanceof Player player) {
+				player.sendOverlayMessage(
+					Component.translatable("message.pointportals.destination_obstructed")
+						.withStyle(ChatFormatting.RED)
+				);
+			}
+			entity.setPortalCooldown(40);
+			return false;
+		}
+
+		// Apply anti-loop cooldown (60 ticks / 3 seconds)
+		entity.setPortalCooldown(60);
+
+		double destX = destPos.getX() + 0.5;
+		double destY = destPos.getY() + 1.0;
+		double destZ = destPos.getZ() + 0.5;
+
+		// Departure effects
+		sourceLevel.playSound(null, sourcePos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.2F);
+		sourceLevel.sendParticles(ParticleTypes.PORTAL, sourcePos.getX() + 0.5, sourcePos.getY() + 1.0, sourcePos.getZ() + 0.5, 25, 0.3, 0.5, 0.3, 0.2);
+
+		// Execute cross-dimensional transfer
+		boolean success = entity.teleportTo(
+			destLevel,
+			destX,
+			destY,
+			destZ,
+			Relative.ROTATION,
+			entity.getYRot(),
+			entity.getXRot(),
+			false
+		);
+
+		if (success) {
+			// Arrival effects at destination
+			destLevel.playSound(null, destPos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.2F);
+			destLevel.sendParticles(ParticleTypes.REVERSE_PORTAL, destX, destY, destZ, 25, 0.3, 0.5, 0.3, 0.1);
+		}
+
+		return success;
+	}
+
+	/**
 	 * Notifies the twin portal when this block entity is broken or destroyed.
 	 */
 	public void notifyTwinOfRemoval() {
@@ -181,15 +301,36 @@ public class TeleporterBlockEntity extends BlockEntity {
 	}
 
 	/**
-	 * Server-side tick to periodically verify twin link integrity.
+	 * Server-side tick to periodically verify twin link integrity and process standing entities.
 	 */
 	public static void serverTick(ServerLevel level, BlockPos pos, BlockState state, TeleporterBlockEntity entity) {
 		if (!state.getValue(TeleporterBlock.LINKED) || entity.twinTarget == null) {
 			return;
 		}
+
 		// Periodically verify link every 40 ticks (2 seconds)
 		if (level.getGameTime() % 40 == 0) {
 			entity.verifyAndSyncLink(false);
+		}
+
+		// Active teleporters monitor standing entities
+		if (state.getValue(TeleporterBlock.POWERED)) {
+			AABB triggerBox = new AABB(
+				pos.getX(), pos.getY() + 0.9, pos.getZ(),
+				pos.getX() + 1.0, pos.getY() + 1.5, pos.getZ() + 1.0
+			);
+
+			List<Entity> entities = level.getEntities((Entity) null, triggerBox);
+			for (Entity e : entities) {
+				if (e.isPassenger() || e.isVehicle()) {
+					continue;
+				}
+				if (e.isOnPortalCooldown()) {
+					e.setPortalCooldown(40);
+					continue;
+				}
+				entity.teleportEntity(level, pos, state, e);
+			}
 		}
 	}
 

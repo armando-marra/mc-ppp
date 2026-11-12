@@ -13,6 +13,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -114,6 +115,28 @@ public class TeleporterBlock extends Block implements EntityBlock {
 			if (hasSignal != state.getValue(POWERED)) {
 				level.setBlock(pos, state.setValue(POWERED, hasSignal), Block.UPDATE_ALL);
 			}
+		}
+	}
+
+	@Override
+	public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+		super.stepOn(level, pos, state, entity);
+		if (level.isClientSide() || entity.isPassenger() || entity.isVehicle()) {
+			return;
+		}
+
+		if (!state.getValue(LINKED) || !state.getValue(POWERED)) {
+			return;
+		}
+
+		if (entity.isOnPortalCooldown()) {
+			entity.setPortalCooldown(40);
+			return;
+		}
+
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be instanceof TeleporterBlockEntity teleporter && level instanceof ServerLevel serverLevel) {
+			teleporter.teleportEntity(serverLevel, pos, state, entity);
 		}
 	}
 

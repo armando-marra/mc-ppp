@@ -13,5 +13,6 @@
   "message.pointportals.tuner_cleared": "Phase Tuner memory cleared.",
   "message.pointportals.status_unlinked": "Teleporter is unlinked. Use a Phase Tuner to pair.",
   "message.pointportals.status_standby": "Teleporter paired with %s at [%s, %s, %s] (Standby - requires Redstone).",
-  "message.pointportals.status_active": "Teleporter paired with %s at [%s, %s, %s] (Active)."
+  "message.pointportals.status_active": "Teleporter paired with %s at [%s, %s, %s] (Active).",
+  "message.pointportals.destination_obstructed": "Destination portal is obstructed!"
 }
