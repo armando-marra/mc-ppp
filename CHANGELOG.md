@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Planned
+- **Iteration 2**:
+  - `TeleporterBlockEntity` implementation with persistent NBT serialization.
+  - Safe Redstone power detection (`neighborChanged`) and synchronized twin unlinking.
+- **Iteration 3**:
+  - Cross-dimensional teleportation mechanics and anti-loop arrival cooldowns.
+- **Iteration 4**:
+  - Fabric Data Generation pipeline for blockstates, models, recipes, loot tables, and `en_us.json`.
+
+---
+
+## [0.0.2] - 2026-11-12
+
 ### Added
 - **Core Registries & Data Components (Iteration 1)**:
   - Registered `pointportals:portal_target` (`DataComponentType<PortalTarget>`) storing dimension `ResourceKey<Level>` and `BlockPos` with full Codec and StreamCodec serialization.
@@ -16,15 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Registered `BlockItem` for the teleporter with block description prefix support.
   - Added mod blocks and items to vanilla `FUNCTIONAL_BLOCKS` and `TOOLS_AND_UTILITIES` Creative Tabs via Fabric `CreativeModeTabEvents`.
   - Added full English in-game localization entries in `en_us.json`.
-
-### Planned
-- **Iteration 2**:
-  - `TeleporterBlockEntity` implementation with persistent NBT serialization.
-  - Safe Redstone power detection (`neighborChanged`) and synchronized twin unlinking.
-- **Iteration 3**:
-  - Cross-dimensional teleportation mechanics and anti-loop arrival cooldowns.
-- **Iteration 4**:
-  - Fabric Data Generation pipeline for blockstates, models, recipes, loot tables, and `en_us.json`.
 
 ---
 
