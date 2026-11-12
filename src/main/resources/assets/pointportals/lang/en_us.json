@@ -1,0 +1,11 @@
+{
+  "block.pointportals.teleporter": "Point-to-Point Teleporter",
+  "item.pointportals.tuner": "Phase Tuner",
+  "tooltip.pointportals.tuner_unbound": "Right-click an unlinked Teleporter to begin pairing.",
+  "tooltip.pointportals.tuner_target": "Armed: Bound to %s at [%s, %s, %s]",
+  "message.pointportals.first_portal_selected": "First portal captured at [%s, %s, %s]. Select the target portal.",
+  "message.pointportals.cannot_self_link": "Cannot link a portal to itself!",
+  "message.pointportals.already_linked": "This portal is already linked to another destination.",
+  "message.pointportals.portals_linked": "Portals successfully paired! Power with Redstone to activate.",
+  "message.pointportals.tuner_cleared": "Phase Tuner memory cleared."
+}

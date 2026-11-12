@@ -7,14 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Core Registries & Data Components (Iteration 1)**:
+  - Registered `pointportals:portal_target` (`DataComponentType<PortalTarget>`) storing dimension `ResourceKey<Level>` and `BlockPos` with full Codec and StreamCodec serialization.
+  - Implemented `PortalTarget` implementing `TooltipProvider` for dynamic item inspection.
+  - Registered `pointportals:teleporter` (`TeleporterBlock`) with `LINKED` and `POWERED` blockstates and dynamic light emission (0, 3, or 12).
+  - Registered `pointportals:tuner` (`TunerItem`) featuring first-node capture, self-link rejection, shift-right-click memory clearing, visual foil enchantment glow when armed, and action-bar feedback.
+  - Registered `BlockItem` for the teleporter with block description prefix support.
+  - Added mod blocks and items to vanilla `FUNCTIONAL_BLOCKS` and `TOOLS_AND_UTILITIES` Creative Tabs via Fabric `CreativeModeTabEvents`.
+  - Added full English in-game localization entries in `en_us.json`.
+
 ### Planned
-- **Iteration 1**:
-  - `TeleporterBlock` block registration and initial blockstate properties (`LINKED`, `POWERED`).
-  - `TunerItem` item registration with modern `DataComponentType` for portal linking.
-  - Creative item group placement for mod blocks and items.
 - **Iteration 2**:
   - `TeleporterBlockEntity` implementation with persistent NBT serialization.
-  - Safe Redstone power detection and synchronized twin unlinking.
+  - Safe Redstone power detection (`neighborChanged`) and synchronized twin unlinking.
 - **Iteration 3**:
   - Cross-dimensional teleportation mechanics and anti-loop arrival cooldowns.
 - **Iteration 4**:

@@ -1,5 +1,8 @@
 package com.project.pointportals;
 
+import com.project.pointportals.registry.ModBlocks;
+import com.project.pointportals.registry.ModDataComponents;
+import com.project.pointportals.registry.ModItems;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -12,6 +15,12 @@ public class PointPortals implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Initializing Point-to-Point Portals mod");
+
+		ModDataComponents.initialize();
+		ModBlocks.initialize();
+		ModItems.initialize();
+
+		LOGGER.info("Point-to-Point Portals registration complete");
 	}
 
 	public static Identifier id(String path) {
