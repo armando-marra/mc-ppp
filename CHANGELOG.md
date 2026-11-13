@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- JFR events for explicit synchronous portal chunk resolution, enabled by an active recording, with operation, dimension, chunk coordinates, initial loaded state and completion status.
+- Opt-in Loom recording via `-PportalProfile`, a PowerShell percentile/CSV summary and an initial controlled loading-performance protocol. The comparative benchmark and tick-time measurements remain pending.
+
+### Changed
+- Aligned development and gameplay documentation with Java 25, Minecraft 26.2, official Mojang mappings, deferred unloaded-twin reconciliation and the implemented cooldown behavior.
+
 ---
 
 ## [0.0.9] - 2026-11-13

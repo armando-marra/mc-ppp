@@ -2,6 +2,7 @@ package com.project.pointportals.block.entity;
 
 import com.project.pointportals.block.TeleporterBlock;
 import com.project.pointportals.component.PortalTarget;
+import com.project.pointportals.diagnostics.PortalChunkLoads;
 import com.project.pointportals.registry.ModBlockEntities;
 import com.project.pointportals.registry.ModBlocks;
 import java.util.List;
@@ -125,7 +126,7 @@ public class TeleporterBlockEntity extends BlockEntity {
 		}
 
 		if (!isLoaded && allowChunkLoading) {
-			twinLevel.getChunk(this.twinTarget.pos());
+			PortalChunkLoads.resolve(twinLevel, this.twinTarget.pos(), "link_verification");
 		}
 
 		BlockState twinState = twinLevel.getBlockState(this.twinTarget.pos());
@@ -190,7 +191,7 @@ public class TeleporterBlockEntity extends BlockEntity {
 		BlockPos destPos = this.twinTarget.pos();
 
 		// Safely resolve the destination chunk
-		destLevel.getChunk(destPos);
+		PortalChunkLoads.resolve(destLevel, destPos, "teleport_destination");
 
 		BlockState destState = destLevel.getBlockState(destPos);
 		if (!destState.is(ModBlocks.TELEPORTER)) {

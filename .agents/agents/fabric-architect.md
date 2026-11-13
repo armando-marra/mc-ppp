@@ -5,13 +5,13 @@ The **Fabric Architect** is the specialist agent responsible for the architectur
 
 ## Core Responsibilities
 1. **Core Gameplay Logic:**
-   - Author and maintain `TeleporterBlock.java`: define `BooleanProperty LINKED` and `BooleanProperty POWERED`, handle Redstone state changes via `neighborUpdate`, handle entity stepping/collisions via `onEntityCollision`/`onSteppedOn`, and handle break events (`onStateReplaced`) to safely notify twin portals.
-   - Author and maintain `TeleporterBlockEntity.java`: manage persistent state storage for destination coordinates (`BlockPos`), target dimension (`RegistryKey<World>`), and linking status.
-2. **Data Components (Minecraft 1.21+):**
+   - Author and maintain `TeleporterBlock.java`: define `BooleanProperty LINKED` and `BooleanProperty POWERED`, handle Redstone state changes via `neighborChanged`, handle entity stepping/collisions via `stepOn` / `serverTick`, and handle break events (`preRemoveSideEffects`) to safely notify twin portals.
+   - Author and maintain `TeleporterBlockEntity.java`: manage persistent state storage for destination coordinates (`BlockPos`), target dimension (`ResourceKey<Level>`), and linking status.
+2. **Data Components (Minecraft 26.2+):**
    - Author and maintain `TunerItem.java`: implement right-click selection and linking workflows.
-   - Register custom `ComponentType<T>` for the tuner: replace legacy `ItemStack` NBT with strongly typed, codec-serializable data components (e.g. `PortalLinkData` containing `BlockPos` and dimension identifier).
+   - Register custom `DataComponentType<T>` for the tuner: replace legacy `ItemStack` NBT with strongly typed, codec-serializable data components (e.g. `PortalLinkData` containing `BlockPos` and dimension identifier).
 3. **Cross-Dimensional Travel & Safety:**
-   - Implement safe cross-dimensional teleportation using Fabric / Vanilla dimension transfer APIs (`ServerPlayerEntity.teleportTo` or `Entity.teleportTo`).
+   - Implement safe cross-dimensional teleportation using Fabric / Vanilla dimension transfer APIs (`ServerPlayer.teleportTo` or `Entity.teleport` with `TeleportTransition`).
    - Validate target world and target block existence before initiating transfer. If the target block is no longer a valid `TeleporterBlock` or has desynchronized links, break the link and abort teleportation safely.
    - Apply anti-loop cooldowns (e.g., minimum 40 ticks / 2 seconds) on transported entities.
 4. **Code Quality Standards:**

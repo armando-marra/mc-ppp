@@ -19,7 +19,7 @@ This skill defines the mandatory protocol for adding new features (blocks, items
 2. Use modern Minecraft 26.2+ patterns:
    - Use `DataComponentType` rather than deprecated NBT on `ItemStack`.
    - Implement `BlockEntity` serialization using modern save/load conventions.
-   - Register registry objects via `Registry.register(BuiltInRegistries.BLOCK, Identifier.of(MOD_ID, name), block)`.
+   - Register registry objects via `Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(MOD_ID, name), block)`.
 3. Separate client logic from common logic to ensure clean dedicated server execution.
 
 ### Phase 3: Verification with Gradle
@@ -33,7 +33,7 @@ This skill defines the mandatory protocol for adding new features (blocks, items
    ```
 3. Inspect output:
    - If compile errors or mapping mismatches occur, review line and column numbers.
-   - Cross-reference Yarn mappings and fix issues immediately.
+   - Cross-reference official Mojang mappings for Minecraft 26.2 and fix issues immediately.
    - Never proceed to the next milestone until the current build is completely green.
 
 ### Phase 4: Review and Alignment

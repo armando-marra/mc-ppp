@@ -15,7 +15,7 @@
 3. **Redstone Dependency:**
    - Portals require continuous Redstone power to maintain active status. Loss of Redstone power instantly transitions the portal back to Standby (`POWERED = false`).
 4. **Chunk-Loading & Cross-Dimension Safety:**
-   - Portals can bridge cross-dimensional destinations (Overworld, Nether, End, or custom dimensions via `RegistryKey<World>`).
+   - Portals can bridge cross-dimensional destinations (Overworld, Nether, End, or custom dimensions via `ResourceKey<Level>`).
    - Twin verification must handle unloaded destination chunks gracefully: verify target world existence, safely load/resolve the destination chunk or verify block state without causing memory leaks or server lag.
    - If the destination portal is broken or replaced, the source portal must cleanly revert to unlinked (`LINKED = false`).
 5. **Anti-Loop Teleportation Safeguards:**
@@ -32,11 +32,11 @@
 - **Base Package:** `com.project.pointportals`
 - **Mod ID:** `pointportals`
 - **Modern Item Data Persistence:**
-   - **Data Components ONLY:** Modern Minecraft (1.20.5+ through 26.x+) uses `DataComponentType`. Legacy `ItemStack` NBT is deprecated/removed. All item metadata (such as `TunerItem` selected portal position and dimension) must strictly use custom registered `ComponentType<T>`.
+   - **Data Components ONLY:** Modern Minecraft (1.20.5+ through 26.x+) uses `DataComponentType`. Legacy `ItemStack` NBT is deprecated/removed. All item metadata (such as `TunerItem` selected portal position and dimension) must strictly use custom registered `DataComponentType<T>`.
 - **BlockEntity Persistence:**
-   - Custom `BlockEntity` persistence must use modern `writeNbt` and `readNbt` (or `saveAdditional`/`loadAdditional`) matching 26.x API conventions.
+   - Custom `BlockEntity` persistence uses `saveAdditional(ValueOutput)` and `loadAdditional(ValueInput)`, matching Minecraft 26.2 official Mojang mappings.
 - **Event Handling & Registry:**
-   - Use standard Fabric API registry hooks (`Registry.register(Registries.BLOCK, ...)`, `Registry.register(Registries.ITEM, ...)`, etc.).
+   - Use standard Fabric API registry hooks (`Registry.register(BuiltInRegistries.BLOCK, ...)`, `Registry.register(BuiltInRegistries.ITEM, ...)`, etc.).
    - Asset and data generation must leverage `FabricDataGenerator` entrypoint.
 
 ---
@@ -53,7 +53,7 @@ Never generate large, monolithic chunks of code in a single turn. All modificati
 ```
 
 1. **Plan:** Propose a focused, self-contained increment (target classes, JSON definitions, or build configs). Define expected behavior and validation criteria.
-2. **Implement:** Write clean, modular, production-ready Java 21 code and valid JSON files. Ensure proper imports and Yarn 1.21.4 mapping usage.
+2. **Implement:** Write clean, modular, production-ready Java 25 code and valid JSON files. Ensure proper imports and official Mojang mapping usage for Minecraft 26.2.
 3. **Verify:** Run `./gradlew build` (and `./gradlew runDatagen` when modifying assets/data). Inspect compilation logs, warnings, and mapping errors. Fix any failure immediately before proceeding.
 4. **Review & Refine:** Summarize what was accomplished, ensure adherence to `PROJECT_DESIGN.md`, and obtain user alignment for the next increment.
 

@@ -2,38 +2,82 @@
 
 Aggiornato al 13 novembre 2026.
 
-## Ripresa nella nuova chat dopo il cambio dei permessi
+## Sviluppo corrente su devel
+
+Il 13 novembre 2026 è stato creato e selezionato il branch locale `devel`
+partendo da main. La modifica locale preesistente di questo documento è
+conservata, insieme al registro storico. Nessun commit o push in questo incremento.
+Le sezioni sulla release 0.0.9 sotto descrivono lo stato precedente allo sviluppo.
+
+- **Allineamento documentale completato:** AGENTS.md, PROJECT_DESIGN.md, README,
+  profili/SOP locali e CHANGELOG allineati a Java 25, Minecraft 26.2 e mappings
+  Mojang. Descritti riconciliazione differita e cooldown effettivo; rimossa la
+  promessa di attivazione configurabile tramite sneak e le garanzie prestazionali
+  non misurate. La modalità sneak non viene sviluppata in questo incremento.
+- **Prestazioni dei caricamenti, primo incremento:** aggiunti eventi JFR per
+  `tuner_source`, `link_verification` e `teleport_destination`, opzione Loom
+  `-PportalProfile` e script PowerShell per conteggi, percentili ed export CSV.
+  La strumentazione misura le chiamate esplicite getChunk senza cambiare ticket,
+  reciprocità, trasporto o politica di caricamento.
+- **Protocollo:** [loading-performance.md](docs/loading-performance.md) definisce
+  fixture caricate, generate/scaricate e nuove, carico seriale e raffica, dimensioni,
+  ripetizioni e budget iniziale proposto (5 ms/chiamata, 50 ms/tick). Nessuna
+  ottimizzazione o asincronia scelta prima delle misure controllate.
+- **Verifica con JFR:** compileJava e build con `-PportalProfile` riuscite,
+  35/35 GameTest; riepilogo validato su 21 eventi reali, tutti con chunk già
+  caricato. Registrazione in `build/run/gameTest/portal-gameTest.jfr` e riepilogo
+  locale in `build/portal-chunk-loads.csv`. È una verifica della strumentazione,
+  non un benchmark dei caricamenti da disco o della generazione.
+- **Verifica senza registrazione:** anche `gradlew build` standard riuscita,
+  35/35 GameTest. Nessun asset modificato: runDatagen non necessario. Restano
+  gli avvisi per risorse client assenti e ritardi server nelle fixture.
+  Il problema ambientale dei socket locali del JDK è stato risolto per i soli
+  processi di verifica usando una directory temporanea corta nel workspace,
+  senza inserire percorsi macchina nella configurazione del progetto.
+- **Prossimo incremento:** automatizzare le fixture della campagna controllata,
+  misurare anche i tick complessivi e confrontare chunk scaricati e nuovi.
+  CI resta pendente; per richiesta dell'utente le prestazioni iniziano prima di CI.
+
+## Stato precedente: release 0.0.9 e ripresa dopo il cambio dei permessi
 
 Ripresa completata su main a partire da f42f11b. Accesso in scrittura a .git
 verificato creando e rimuovendo un file temporaneo, senza modificare le ACL.
-I passi 1?4 sono separati nei quattro commit sotto, ciascuno verificato con
-una build completa prima del commit. Nessun push eseguito.
+I passi 1–4 sono completati e separati nei quattro commit sotto, ciascuno
+verificato con una build completa prima del commit. Tutti sono pubblicati su
+origin/main e inclusi nella release 0.0.9.
 Tutti i sette file di codice, manifest e checklist finali sono identici byte
-per byte alla copia iniziale. Questo documento ? aggiornato e il suo testo
-precedente ? conservato integralmente nel registro storico in fondo.
+per byte alla copia iniziale. Questo documento è aggiornato e il suo testo
+precedente è conservato integralmente nel registro storico in fondo.
 
-## Commit dei passi 1?4
+## Commit dei passi 1–4
 
 | Passo | Commit effettivo | Verifica eseguita |
 | --- | --- | --- |
-| 1. Persistenza e base preesistente | `9cc95b2` ? test: cover portal persistence and establish tuner regression suite | build riuscita, 24/24 GameTest |
-| 2. Chunk scaricati e scadenza ticket | `e67aa16` ? test: verify unloaded portal twins and arrival ticket expiry | build riuscita, 26/26 GameTest |
-| 3. Tuner tra dimensioni | `7318be8` ? test: cover tuner interactions across dimensions | build riuscita, 29/29 GameTest |
-| 4. Giocatori ed End | Questo commit ? test: verify player transfers and End travel | build riuscita, 35/35 GameTest |
+| 1. Persistenza e base preesistente | `9cc95b2` — test: cover portal persistence and establish tuner regression suite | build riuscita, 24/24 GameTest |
+| 2. Chunk scaricati e scadenza ticket | `e67aa16` — test: verify unloaded portal twins and arrival ticket expiry | build riuscita, 26/26 GameTest |
+| 3. Tuner tra dimensioni | `7318be8` — test: cover tuner interactions across dimensions | build riuscita, 29/29 GameTest |
+| 4. Giocatori ed End | `702dc87` — test: verify player transfers and End travel | build riuscita, 35/35 GameTest |
 
-Il quarto commit contiene questo aggiornamento: il suo hash non pu? essere
-inserito nel proprio contenuto. Per risolvere l'identificativo effettivo anche
-dopo altri commit, usare:
+## Versione e pubblicazione
 
-```powershell
-git log -1 --format="%h %s" --fixed-strings --grep="test: verify player transfers and End travel"
-```
+Il commit `b386526` aggiorna CHANGELOG.md con un avanzamento per ciascun passo:
+0.0.6 per la persistenza e la base preesistente, 0.0.7 per i chunk e i ticket,
+0.0.8 per il tuner tra dimensioni e 0.0.9 per giocatori ed End. La versione
+della mod in gradle.properties è 0.0.9.
+
+Push di main e del tag annotato `v0.0.9` completato. Il tag punta a `b386526`.
+La [release GitHub 0.0.9](https://github.com/armando-marra/mc-ppp/releases/tag/v0.0.9)
+è pubblicata come ultima versione, non come bozza o prerelease, con note e
+allegati `pointportals-0.0.9.jar` e `pointportals-0.0.9-sources.jar`.
+Verificata la versione 0.0.9 nel metadata del JAR e l'assenza delle classi
+GameTest dal JAR distribuito. Anche la build della versione 0.0.9 ha superato
+35/35 GameTest. La pubblicazione è stata verificata con `gh release view`.
 
 Il passo 1 comprende i quattro test di persistenza, i nove test locali del
 tuner, il ticket temporaneo vanilla e le correzioni delle fixture di arrivo.
 Il passo 2 registra ChunkLifecycleGameTests e aggiunge il test di scadenza del
 ticket nel file condiviso CrossDimensionGameTests. Il passo 3 aggiunge i tre
-casi useOn tra dimensioni. Il passo 4 aggiunge due viaggi di entit? da/verso
+casi useOn tra dimensioni. Il passo 4 aggiunge due viaggi di entità da/verso
 l'End e quattro viaggi di ServerPlayer tra Overworld, Nether ed End.
 Manifest e checklist sono aggiornati insieme alle rispettive coperture.
 
@@ -48,22 +92,41 @@ connessione simulata mantengono la soppressione locale dell'avviso di rimozione.
 
 - Il vero arresto e riavvio del mondo resta manuale: i test di persistenza
   esercitano le API reali di serializzazione, senza riavviare il server.
-- La connessione dei giocatori ? simulata: feedback visivo, messaggi, suoni e
+- La connessione dei giocatori è simulata: feedback visivo, messaggi, suoni e
   conferma del cambio dimensione richiedono una verifica con client reale.
-- Restano le prove manuali su entit? larghe/alte, ulteriori ostacoli e pericoli,
+- Restano le prove manuali su entità larghe/alte, ulteriori ostacoli e pericoli,
   permanenza sul portale oltre il cooldown e ritorno dopo essersi allontanati.
 - Gli scaricamenti reali e la scadenza dei ticket sono coperti dal passo 2;
-  il costo dei caricamenti sincroni non ? stato misurato.
-- CI e allineamento dei riferimenti obsoleti Java/Yarn in AGENTS.md,
-  PROJECT_DESIGN.md e README restano attivit? future; quei file sono invariati.
+  il costo dei caricamenti sincroni non è stato misurato.
+- CI resta da implementare; l'allineamento documentale è completato su devel.
 
-La checklist ? in [portal-regression-checks.md](docs/portal-regression-checks.md).
+La checklist è in [portal-regression-checks.md](docs/portal-regression-checks.md).
+
+## Miglioramenti ancora da implementare
+
+1. **Allineamento documentale (completato su devel):** obiettivo originale: correggere i riferimenti a Java 21,
+   Minecraft 1.21 e Yarn nei documenti, usando Minecraft 26.2, Java 25 e
+   mappings Mojang. Descrivere nel README la riconciliazione differita dei
+   gemelli con chunk scaricati e rimuovere le garanzie prestazionali non misurate.
+   L'attivazione configurabile tramite sneak descritta nel README non è
+   implementata: decidere se svilupparla o rimuovere quella promessa.
+2. **Integrazione continua:** aggiungere GitHub Actions con Java 25, build,
+   GameTest e conservazione dei log in caso di errore; verificare che build e
+   fixture funzionino anche senza la cache locale.
+3. **Prestazioni dei caricamenti (avviato su devel):** misurare le chiamate sincrone a getChunk
+   nel tuner e nel teletrasporto con destinazioni già generate e nuove,
+   definendo un carico riproducibile e un budget di tick. Valutare limiti,
+   accodamento o gestione asincrona solo sulla base dei risultati.
+
+Ordine aggiornato: documentazione completata, misurazione delle prestazioni avviata; CI resta pendente. I limiti
+di verifica manuale sopra restano separati da questi interventi. I passi
+1–4 non richiedono ulteriore implementazione per la copertura concordata.
 
 ## Registro storico conservato
 
-Il testo seguente ? quello della sessione precedente, conservato integralmente.
-Le indicazioni su permessi bloccati, commit mancanti e attivit? ancora da
-implementare dei passi 1?4 sono superate dallo stato corrente sopra.
+Il testo seguente è quello della sessione precedente, conservato integralmente.
+Le indicazioni su permessi bloccati, commit mancanti, push non eseguiti e attività
+ancora da implementare dei passi 1–4 sono superate dallo stato corrente sopra.
 
 # Stato dei miglioramenti
 

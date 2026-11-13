@@ -43,6 +43,12 @@ loading the twin for 45 ticks, then remove the source and reload/reconcile the
 surviving twin. A transfer test checks entity arrival and actual destination
 unload 350 ticks later, after the temporary portal ticket expires.
 
+For optional JFR diagnostics run `./gradlew build -PportalProfile`. Explicit
+chunk resolutions emit `pointportals.ChunkLoad` events; see the
+[loading performance protocol](loading-performance.md) for export and workload
+definitions. Regression timings do not establish disk-loading, generation or
+whole-tick performance budgets.
+
 ## Manual checks
 
 Run `./gradlew build`, then `./gradlew runClient`. Use a disposable creative

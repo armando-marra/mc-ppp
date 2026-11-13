@@ -3,6 +3,7 @@ package com.project.pointportals.item;
 import com.project.pointportals.block.TeleporterBlock;
 import com.project.pointportals.block.entity.TeleporterBlockEntity;
 import com.project.pointportals.component.PortalTarget;
+import com.project.pointportals.diagnostics.PortalChunkLoads;
 import com.project.pointportals.registry.ModBlocks;
 import com.project.pointportals.registry.ModDataComponents;
 import java.util.function.Consumer;
@@ -125,7 +126,7 @@ public class TunerItem extends Item {
 			}
 
 			// Safely resolve the chunk of the source portal
-			levelA.getChunk(storedTarget.pos());
+			PortalChunkLoads.resolve(levelA, storedTarget.pos(), "tuner_source");
 
 			if (!levelA.getBlockState(storedTarget.pos()).is(ModBlocks.TELEPORTER)) {
 				stack.remove(ModDataComponents.PORTAL_TARGET);

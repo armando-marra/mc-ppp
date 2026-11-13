@@ -25,6 +25,12 @@ loom {
 	}
 
 	runs {
+		// Opt-in JVM recording for the game process only (not the Gradle daemon).
+		configureEach {
+			if (providers.gradleProperty('portalProfile').isPresent()) {
+				vmArg "-XX:StartFlightRecording=settings=profile,dumponexit=true,filename=portal-${name}.jfr"
+			}
+		}
 		datagen {
 			inherit client
 			name "Data Generation"
