@@ -7,8 +7,12 @@
   "entrypoints": {
     "fabric-gametest": [
       "com.project.pointportals.PortalGameTests",
-      "com.project.pointportals.CrossDimensionGameTests"
+      "com.project.pointportals.CrossDimensionGameTests",
+      "com.project.pointportals.TunerGameTests",
+      "com.project.pointportals.PersistenceGameTests"
     ]
   },
-  "depends": { "pointportals": "*" }
+  "depends": {
+    "pointportals": "*"
+  }
 }

@@ -13,8 +13,20 @@ immediate-return cooldown, and loss of Redstone power. Cross-dimension tests
 cover Overworld-to-Nether and Nether-to-Overworld travel with exact arrival
 coordinates, UUID preservation, absence of a duplicate at the source, rotation,
 arrival cooldown, reciprocal links, and refusal of an obstructed Nether exit.
-They use pigs; player transfers, the End, chunk unloading, persistence, and
-tuner interactions still need further coverage or the manual checks below.
+Arrival assertions run two ticks after transfer, with both portals kept intact
+until verification and fixture cleanup on success or assertion failure. Transfers
+use vanilla's expiring portal ticket to activate an otherwise idle destination;
+loading its blocks alone does not keep the arriving entity accessible.
+Persistence tests exercise the actual BlockEntity save/load APIs (including
+full metadata reconstruction), reciprocal destinations, unlinked portals,
+missing/malformed data, missing dimensions, blockstate reconciliation, and
+the full tuner ItemStack codec with its selected-target component. They do
+not restart the server; the save-and-reopen check below remains necessary.
+
+Tuner tests invoke the actual item interaction with a mock survival player.
+They check component selection, pairing and power state, self-link refusal,
+occupied endpoints, a source claimed by a second tuner, a destroyed source,
+selection cancellation, manual unlinking, and interaction with ordinary blocks.
 
 ## Manual checks
 

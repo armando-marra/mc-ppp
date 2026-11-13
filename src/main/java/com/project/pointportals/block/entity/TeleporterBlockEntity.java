@@ -5,7 +5,6 @@ import com.project.pointportals.component.PortalTarget;
 import com.project.pointportals.registry.ModBlockEntities;
 import com.project.pointportals.registry.ModBlocks;
 import java.util.List;
-import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -25,9 +24,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -238,16 +239,16 @@ public class TeleporterBlockEntity extends BlockEntity {
 		sourceLevel.sendParticles(ParticleTypes.PORTAL, sourcePos.getX() + 0.5, sourcePos.getY() + 1.0, sourcePos.getZ() + 0.5, 25, 0.3, 0.5, 0.3, 0.2);
 
 		// Execute cross-dimensional transfer
-		boolean success = entity.teleportTo(
+		// Use vanilla's expiring portal ticket so an otherwise idle destination
+		// dimension tracks and ticks the arriving entity after the transfer.
+		boolean success = entity.teleport(new TeleportTransition(
 			destLevel,
-			destX,
-			destY,
-			destZ,
-			Set.of(),
+			new Vec3(destX, destY, destZ),
+			Vec3.ZERO,
 			entity.getYRot(),
 			entity.getXRot(),
-			false
-		);
+			TeleportTransition.PLACE_PORTAL_TICKET
+		)) != null;
 
 		if (success) {
 			// Arrival effects at destination
