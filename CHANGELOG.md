@@ -9,6 +9,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.0.9] - 2026-11-13
+
+### Added
+- **Step 4 - Players and End travel** (`702dc87`): two entity transfers between Overworld and End and four ServerPlayer transfers between Overworld/Nether and Overworld/End.
+- Verify exact arrival position, rotation, UUID, player identity and unique registration, cooldown, immediate-return refusal, and reciprocal links.
+- Full build verified with **35/35 GameTests**. Player connections are simulated; real-client dimension acknowledgement and feedback remain manual checks.
+
+---
+
+## [0.0.8] - 2026-11-13
+
+### Added
+- **Step 3 - Cross-dimension tuner interactions** (`7318be8`): three tests invoke the real item interaction in Overworld and Nether for pairing/unlinking, occupied-destination rejection, and destroyed-source selection recovery.
+- Verify reciprocal links, independent Redstone state, selection consumption or preservation, and fixture cleanup.
+- Full build verified with **29/29 GameTests**.
+
+---
+
+## [0.0.7] - 2026-11-13
+
+### Added
+- **Step 2 - Unloaded chunks and ticket expiry** (`e67aa16`): tests prove real remote chunk unload, retain links without loading the twin, and reconcile a surviving twin after source destruction and reload.
+- Verify entity arrival followed by actual destination chunk unload after the temporary portal ticket expires, without recreating the ticket during link verification.
+- Full build verified with **26/26 GameTests**.
+
+---
+
+## [0.0.6] - 2026-11-13
+
+### Added
+- **Step 1 - Persistence and existing regression baseline** (`9cc95b2`): four tests use the actual BlockEntity and ItemStack save/load APIs, covering reciprocal destinations, unlinked portals, missing or malformed data, nonexistent dimensions, BlockState reconciliation, and tuner Data Components.
+- Nine tuner tests cover real item interactions, exclusive pairing, occupied endpoints, stale selections, cancellation, and unlinking.
+- Cross-dimension fixture assertions query the destination after two ticks and clean up entities and portals in both levels.
+- Full build verified with **24/24 GameTests**. An actual world shutdown/restart remains a separate manual check.
+
+### Fixed
+- Transfers use vanilla's expiring portal arrival ticket to keep an idle destination active temporarily, without permanent chunk forcing.
+- Included the preceding portal safety baseline (`f42f11b`): full arrival-volume collision/hazard and border checks, stale-reference protection, inconsistent-state recovery, distributed link verification, absolute rotation, portable Java 25 builds, and server GameTest integration.
+
+---
+
 ## [0.0.5] - 2026-11-13
 
 ### Added
