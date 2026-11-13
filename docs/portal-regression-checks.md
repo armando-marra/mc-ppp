@@ -28,6 +28,11 @@ They check component selection, pairing and power state, self-link refusal,
 occupied endpoints, a source claimed by a second tuner, a destroyed source,
 selection cancellation, manual unlinking, and interaction with ordinary blocks.
 
+Chunk lifecycle tests wait for a real remote unload, retain the link without
+loading the twin for 45 ticks, then remove the source and reload/reconcile the
+surviving twin. A transfer test checks entity arrival and actual destination
+unload 350 ticks later, after the temporary portal ticket expires.
+
 ## Manual checks
 
 Run `./gradlew build`, then `./gradlew runClient`. Use a disposable creative

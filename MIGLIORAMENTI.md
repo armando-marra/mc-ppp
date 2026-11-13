@@ -15,9 +15,10 @@ non costituiscono lo stato corrente.
 1. Persistenza e base preesistente: quattro casi di persistenza, nove test
    del tuner, ticket di arrivo vanilla e fixture cross-dimensione corrette.
    Verifica eseguita: build riuscita con 24/24 GameTest; diff --check pulito.
-   Commit: quello che introduce questa sezione (hash riportato nel passo seguente).
-2. Chunk scaricati e scadenza ticket: implementazione conservata, da integrare
-   nel secondo commit e verificare con 26/26 GameTest.
+   Commit: `9cc95b2`.
+2. Chunk scaricati e scadenza ticket: integrati entrambi i casi.
+   Build riuscita con 26/26 GameTest; diff --check pulito.
+   Commit: quello di questo incremento (hash nel passo seguente).
 3. Tuner tra dimensioni: implementazione conservata, da integrare nel terzo
    commit e verificare con 29/29 GameTest.
 4. Giocatori ed End: implementazione conservata, da integrare nel quarto

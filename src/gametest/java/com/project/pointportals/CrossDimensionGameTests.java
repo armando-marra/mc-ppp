@@ -18,6 +18,40 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 
 public class CrossDimensionGameTests {
+	@GameTest(maxTicks = 450)
+	public void arrivalTicketExpiresWithoutKeepingChunkLoaded(GameTestHelper test) {
+		var pair = new DimensionPair(test, 30000);
+		try {
+			var a = (TeleporterBlockEntity) pair.overworld.getBlockEntity(pair.local);
+			var pig = EntityTypes.PIG.spawn(pair.overworld, pair.local.above(), EntitySpawnReason.COMMAND);
+			test.assertTrue(pig != null, "Pig must spawn");
+			pair.testEntity = pig;
+			pig.setNoAi(true);
+			var uuid = pig.getUUID();
+			test.assertTrue(a.teleportEntity(pair.overworld, pair.local, a.getBlockState(), pig), "Transfer must install arrival ticket");
+			test.runAfterDelay(2, () -> {
+				try {
+					var arrivals = pair.otherLevel.getEntities((Entity) null, new AABB(pair.remote).inflate(4), e -> e.getUUID().equals(uuid));
+					test.assertTrue(arrivals.size() == 1, "Arrival ticket must expose transferred entity");
+					arrivals.getFirst().discard();
+				} catch (RuntimeException | Error failure) {
+					pair.close();
+					throw failure;
+				}
+			});
+			test.runAfterDelay(350, () -> {
+				try (pair) {
+					test.assertFalse(pair.otherLevel.isLoaded(pair.remote), "Expired portal ticket must allow real chunk unload");
+					test.assertTrue(a.isLinked() && a.verifyAndSyncLink(false), "Ticket expiry must preserve source link");
+					test.assertFalse(pair.otherLevel.isLoaded(pair.remote), "Link verification must not recreate ticket");
+					test.succeed();
+				}
+			});
+		} catch (RuntimeException | Error failure) {
+			pair.close();
+			throw failure;
+		}
+	}
 	@GameTest
 	public void overworldToNether(GameTestHelper test) {
 		transfer(test, false);

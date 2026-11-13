@@ -9,10 +9,9 @@
       "com.project.pointportals.PortalGameTests",
       "com.project.pointportals.CrossDimensionGameTests",
       "com.project.pointportals.TunerGameTests",
-      "com.project.pointportals.PersistenceGameTests"
+      "com.project.pointportals.PersistenceGameTests",
+      "com.project.pointportals.ChunkLifecycleGameTests"
     ]
   },
-  "depends": {
-    "pointportals": "*"
-  }
+  "depends": { "pointportals": "*" }
 }
