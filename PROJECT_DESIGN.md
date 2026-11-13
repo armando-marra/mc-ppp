@@ -67,8 +67,11 @@ Per gli asset eseguire anche `./gradlew runDatagen`. Non aggiungere Yarn.
 - [x] Datagen di modelli, ricette, loot, tag e lingua.
 - [x] GameTest su persistenza, tuner, scaricamenti reali, ticket, giocatori ed End.
 - [ ] CI con Java 25 e verifica da cache vuota.
-- [ ] Prestazioni: strumentazione iniziale e [protocollo](docs/loading-performance.md);
-  campagna comparativa da eseguire prima di scegliere accodamento, limiti o asincronia.
+- [x] Strumentazione JFR e banco automatizzato per confrontare chunk caricati,
+  scaricati e nuovi, con verifica delle invarianti e dei tempi dei tick. Prima campagna: 1.440 operazioni; [report](docs/loading-performance-results.md).
+- [ ] Conferma su server dedicato a 20 TPS secondo il
+  [protocollo](docs/loading-performance.md), prima di scegliere una soluzione
+  definitiva per accodamento, limiti o asincronia.
 
 Restano distinti i [controlli manuali](docs/portal-regression-checks.md): riavvio
 reale del mondo, client reale e ulteriori casi di ingombro e cooldown.

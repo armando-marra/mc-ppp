@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Isolated, opt-in loading benchmark with fresh worlds, loaded/unloaded/new-target fixtures, serial and burst workloads, completed vanilla tick timings and validated JFR/operation CSV summaries. Checks reciprocal pairing, stale-target recovery, arrival identity/position/rotation, cooldown and target release after ticket expiry.
+- First three-repeat stress campaign: 1,440 verified operations, 3,423 completed tick samples and 36 successful target-release checks. Published the summary and attribution limits in `docs/loading-performance-results.md`; ordinary build still passes 35/35 GameTests.
 - JFR events for explicit synchronous portal chunk resolution, enabled by an active recording, with operation, dimension, chunk coordinates, initial loaded state and completion status.
-- Opt-in Loom recording via `-PportalProfile`, a PowerShell percentile/CSV summary and an initial controlled loading-performance protocol. The comparative benchmark and tick-time measurements remain pending.
+- Opt-in Loom recording via `-PportalProfile`, PowerShell percentile/CSV summaries and a loading-performance protocol. Dedicated-server confirmation at normal 20 TPS pacing remains pending.
 
 ### Changed
 - Aligned development and gameplay documentation with Java 25, Minecraft 26.2, official Mojang mappings, deferred unloaded-twin reconciliation and the implemented cooldown behavior.

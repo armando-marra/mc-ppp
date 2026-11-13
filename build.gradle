@@ -27,7 +27,7 @@ loom {
 	runs {
 		// Opt-in JVM recording for the game process only (not the Gradle daemon).
 		configureEach {
-			if (providers.gradleProperty('portalProfile').isPresent()) {
+			if (providers.gradleProperty('portalProfile').isPresent() || providers.gradleProperty('portalBenchmark').isPresent()) {
 				vmArg "-XX:StartFlightRecording=settings=profile,dumponexit=true,filename=portal-${name}.jfr"
 			}
 		}
@@ -59,6 +59,29 @@ fabricApi {
 		modId = "pointportals-test"
 		enableClientGameTests = false
 		eula = true
+	}
+}
+
+def benchmarkEnabled = providers.gradleProperty('portalBenchmark').isPresent()
+if (benchmarkEnabled) {
+	loom.runs.gameTest {
+		runDir providers.gradleProperty('portalBenchmarkDir').get()
+		['samples': '30', 'burst': '10', 'repeats': '3', 'interval': '20', 'warmupTicks': '1200'].each { key, fallback ->
+			vmArg "-Dpointportals.benchmark.${key}=${providers.gradleProperty('portalBenchmark.' + key).getOrElse(fallback)}"
+		}
+		vmArg "-Dpointportals.benchmark.filter=${providers.gradleProperty('portalBenchmark.filter').getOrElse('.*')}"
+	}
+}
+
+tasks.named('processGametestResources') {
+	inputs.property('portalBenchmark', benchmarkEnabled)
+	doLast {
+		if (benchmarkEnabled) {
+			def manifest = new File(destinationDir, 'fabric.mod.json')
+			def metadata = new groovy.json.JsonSlurper().parse(manifest)
+			metadata.entrypoints['fabric-gametest'] = ['com.project.pointportals.benchmark.LoadingBenchmark']
+			manifest.setText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(metadata)), 'UTF-8')
+		}
 	}
 }
 

@@ -2,7 +2,57 @@
 
 Aggiornato al 13 novembre 2026.
 
-## Sviluppo corrente su devel
+## Benchmark dei caricamenti su devel — completato
+
+Base documentale e strumentazione registrate nel commit `d7361d2`.
+Il secondo incremento aggiunge il banco GameTest opt-in, il runner con mondi
+nuovi, misure di chiamate/operazioni/tick e report CSV/JSON correlati a JFR.
+Codice e risultati sono raccolti nel commit dedicato al benchmark su `devel`.
+Nessun push e nessuna modifica alla politica sincrona del trasporto.
+
+**Campagna conclusiva:** `build/benchmarks/20261113-172415-3c7ea9ca`, 30 richieste
+singole a intervallo di un tick e raffiche da 10, tre ripetizioni delle 12
+combinazioni. Validati 1.440 esiti: 960 riusciti e 480 rifiuti attesi per target
+nuovi/obsoleti. Correlati 1.440 eventi JFR e 3.423 tick completati. Tutte le 36
+celle hanno confermato lo scaricamento finale dei target. Arrivi verificati dopo
+2–5 tick; conferme di rilascio dopo 350–1856 tick. Questi ultimi valori non sono
+la misura esatta del timeout dei ticket vanilla.
+
+[Report e limiti](docs/loading-performance-results.md),
+[protocollo e comandi](docs/loading-performance.md), CSV sintetici in
+`docs/benchmarks/`. Log, dati grezzi, registrazione JFR, runtime, hardware,
+revisione/patch e hash restano nella directory locale della campagna.
+
+**Risultato prestazionale:** 917 chiamate getChunk oltre 5 ms; sul teletrasporto
+verso chunk scaricati nel Nether p95 6034,455 ms e massimo 8281,920 ms. Raffica
+peggiore: tick da 31286,638 ms. Anche i riferimenti senza nuove richieste superano
+50 ms al p95: non attribuire alla sola mod tutti gli sforamenti. I dati includono
+fixture, lavoro pendente e costi del vicinato richiesto dai ticket di arrivo.
+Servono area interamente pregenerata, quiescenza e server dedicato a 20 TPS per
+separare lettura da disco, generazione e costo incrementale prima di una scelta
+definitiva fra limiti, accodamento e asincronia.
+
+**Verifiche:** campagna con due GameTest richiesti superati (benchmark e controllo
+Fabric); build ordinaria riuscita con 35/35 GameTest, selezione ordinaria delle
+cinque suite ripristinata. Selezione benchmark verificata sulle risorse generate;
+manifest sorgente JSON valido. I 24 file Java coincidono con gli hash della
+campagna. Classi di test/benchmark assenti dal JAR distribuito e nessun asset
+modificato: runDatagen non necessario. Restano i noti avvisi per risorse client
+assenti e ritardi del server nelle fixture.
+
+I primi run diagnostici interrotti sono conservati e non inclusi nel report.
+Il banco è stato corretto preparando le entità prima del carico, mantenendo
+attiva la partenza e attendendo l'esposizione degli arrivi con limite di 200 tick.
+Il limite iniziale di pulizia di 800 tick è stato sostituito da una diagnostica
+fino a 6000 tick: i ticket vanilla possono attendere che il chunk sia pronto per
+il salvataggio prima di consumare il timeout. Nessun ticket viene rimosso a forza
+per far passare il controllo della sua scadenza naturale.
+
+**Prossimi incrementi:** conferma con riferimento stabilizzato e carico a
+intervallo di 20 tick, confronto con il carico sostenuto e decisione sulle
+ottimizzazioni. CI e verifiche con client/riavvio reale restano pendenti.
+
+## Primo incremento su devel (stato precedente al benchmark)
 
 Il 13 novembre 2026 è stato creato e selezionato il branch locale `devel`
 partendo da main. La modifica locale preesistente di questo documento è
@@ -113,12 +163,12 @@ La checklist è in [portal-regression-checks.md](docs/portal-regression-checks.m
 2. **Integrazione continua:** aggiungere GitHub Actions con Java 25, build,
    GameTest e conservazione dei log in caso di errore; verificare che build e
    fixture funzionino anche senza la cache locale.
-3. **Prestazioni dei caricamenti (avviato su devel):** misurare le chiamate sincrone a getChunk
+3. **Prestazioni dei caricamenti (benchmark completato su devel, conferma pendente):** obiettivo originale: misurare le chiamate sincrone a getChunk
    nel tuner e nel teletrasporto con destinazioni già generate e nuove,
    definendo un carico riproducibile e un budget di tick. Valutare limiti,
    accodamento o gestione asincrona solo sulla base dei risultati.
 
-Ordine aggiornato: documentazione completata, misurazione delle prestazioni avviata; CI resta pendente. I limiti
+Ordine aggiornato: documentazione e primo benchmark completati; conferma prestazionale su server dedicato e CI restano pendenti. I limiti
 di verifica manuale sopra restano separati da questi interventi. I passi
 1–4 non richiedono ulteriore implementazione per la copertura concordata.
 

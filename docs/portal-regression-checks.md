@@ -49,6 +49,14 @@ chunk resolutions emit `pointportals.ChunkLoad` events; see the
 definitions. Regression timings do not establish disk-loading, generation or
 whole-tick performance budgets.
 
+`scripts/Run-LoadingBenchmark.ps1` selects an isolated benchmark entrypoint
+instead of the regression suites and creates a fresh run directory. It checks
+loaded/unloaded/new-target fixtures, actual tuner interactions and transfers,
+missing-target recovery, reciprocal links, arrival identity/position/rotation,
+cooldown and eventual target unload after fixture and vanilla tickets expire.
+The normal build still selects all five regression suites (35 total tests,
+including Fabric's own test); benchmark classes are never distributed in the JAR.
+
 ## Manual checks
 
 Run `./gradlew build`, then `./gradlew runClient`. Use a disposable creative

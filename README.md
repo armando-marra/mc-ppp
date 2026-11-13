@@ -101,6 +101,9 @@ Keep machine-specific JDK paths in your user Gradle configuration, outside this 
 # Run the server regression suite with optional JFR diagnostics
 ./gradlew runGameTest -PportalProfile
 
+# Isolated automated loading benchmark (PowerShell; writes a fresh world/report)
+./scripts/Run-LoadingBenchmark.ps1
+
 # Run Fabric Data Generation pipeline (models, recipes, blockstates, lang)
 ./gradlew runDatagen
 
