@@ -28,12 +28,12 @@ Verifiche effettuate:
 - Nessun benchmark rilanciato. Prove con client reale e modpack dell'utente
   restano distinte dalla suite e dalla verifica di avvio.
 
-Le modifiche sono ancora **Unreleased**. L'utente ha autorizzato commit e push
-su `devel` e merge in `main` locale; il push di `main` resta in attesa di una
-sua indicazione. Nessun nuovo tag o release richiesto per questo incremento.
-La versione resta `0.0.10` nel checkout; i JAR
-già pubblicati non vengono modificati e richiedono ancora Loader `>=0.20.1`.
-Prima di pubblicare la correzione, preparare una nuova versione e il changelog.
+La compatibilità è stata integrata in `main` con il commit `2626de4` e pubblicata
+sul branch remoto dall'utente. Versione ora aggiornata a **0.0.11**, con sezione
+dedicata nel changelog: l'utente ha autorizzato commit e push su `main`, quindi
+creazione e push del tag `v0.0.11` per avviare la release automatica.
+I JAR delle release `0.0.10` e precedenti non vengono modificati e richiedono
+ancora Loader `>=0.20.1`. Il supporto a Loader `>=0.19.5` parte dalla `0.0.11`.
 Le note sotto sui push di main in attesa appartengono alla preparazione storica
 della release `0.0.10`, completata successivamente.
 

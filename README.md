@@ -95,7 +95,7 @@ The development baseline is Minecraft 26.2, Fabric Loader 0.19.5 and Fabric API
 stops a dedicated production server with the packaged mod. Earlier Loader
 0.19.x versions and Minecraft versions before 26.2 are not supported by this
 change. A real-client gameplay check remains separate from these automated
-tests. The relaxed requirements are currently unreleased; previously published
+tests. The relaxed requirements apply starting with **0.0.11**; previously published
 0.0.10 and 0.0.9 JARs still require Loader >= 0.20.1.
 
 ### Common Gradle Commands
@@ -127,7 +127,7 @@ tests. The relaxed requirements are currently unreleased; previously published
 
 ## Releases
 
-The current project version is **0.0.10**. Preparing this version does not
+The current project version is **0.0.11**. Preparing this version does not
 publish a release; publication starts only after pushing its version tag.
 
 Release automation runs only when a `v*` tag is pushed. Pushes and pull requests
@@ -138,7 +138,7 @@ release commit before tagging it. Benchmarks remain a separate, manual task.
 1. Set `mod_version` and add matching release notes in `CHANGELOG.md`, then commit.
 2. For a stable release, integrate that commit into `main` and verify it locally.
    For a release candidate, use a commit on `devel`.
-3. Create and push the matching tag, for example `v0.0.10` or `v0.0.10-rc.1`.
+3. Create and push the matching tag, for example `v0.0.11` or `v0.0.11-rc.1`.
    These are examples: the current version remains defined in `gradle.properties`.
 
 The [release workflow](.github/workflows/release.yml) checks the exact tagged
@@ -146,10 +146,10 @@ commit, branch ancestry, version and changelog before installing Java 25.
 It runs `bash ./gradlew --no-daemon jar sourcesJar`, verifies the resulting
 packages and publishes a GitHub Release with the mod JAR, sources JAR and
 `SHA256SUMS.txt`. Published files include the mod version, Minecraft version and
-loader: `pointportals-0.0.10-mc26.2-fabric.jar` and
-`pointportals-0.0.10-mc26.2-fabric-sources.jar`. These names are staged in
+loader: `pointportals-0.0.11-mc26.2-fabric.jar` and
+`pointportals-0.0.11-mc26.2-fabric-sources.jar`. These names are staged in
 `build/release`; original Gradle outputs in `build/libs` are unchanged.
-The tag remains plain SemVer with a `v` prefix, such as `v0.0.10`.
+The tag remains plain SemVer with a `v` prefix, such as `v0.0.11`.
 Only the runtime JAR requires expanded version metadata;
 the sources JAR includes the original resource template. RCs are prereleases;
 older stable versions do not replace a newer stable release as Latest.
