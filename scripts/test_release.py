@@ -23,7 +23,7 @@ class ReleaseTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             os.chdir(directory)
             try:
-                Path("gradle.properties").write_text("mod_version=1.2.3\narchives_base_name=pointportals\n")
+                Path("gradle.properties").write_text("mod_version=1.2.3\narchives_base_name=pointportals\nminecraft_version=26.2\n")
                 Path("CHANGELOG.md").write_text("## [Unreleased]\n\nFuture\n\n## [1.2.3]\n\nRelease notes\n\n---\n\n## [1.2.2]\n\nOld\n")
                 with patch.dict(os.environ, GITHUB_REF_NAME="v1.2.3", GITHUB_REPOSITORY="owner/repo"):
                     yield
@@ -66,6 +66,12 @@ class ReleaseTests(unittest.TestCase):
             self.write_jars()
             assets = release.package()
             self.assertEqual(len(assets), 3)
+            self.assertEqual([asset.name for asset in assets], [
+                "pointportals-1.2.3-mc26.2-fabric.jar",
+                "pointportals-1.2.3-mc26.2-fabric-sources.jar", "SHA256SUMS.txt"])
+            for asset, suffix in zip(assets[:2], ("", "-sources")):
+                self.assertEqual(asset.read_bytes(), Path(f"build/libs/pointportals-1.2.3{suffix}.jar").read_bytes())
+                self.assertIn(f"  {asset.name}\n", assets[-1].read_text())
             self.assertEqual(len(assets[-1].read_text().splitlines()), 2)
             for bad_version in ("0.0.0", "${version}"):
                 self.write_jars(runtime_version=bad_version)

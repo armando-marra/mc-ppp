@@ -45,7 +45,7 @@ jobs:
       - name: Package release (no tests or benchmarks)
         run: bash ./gradlew --no-daemon jar sourcesJar
 
-      - name: Verify JARs and calculate checksums
+      - name: Verify and name release JARs with Minecraft and loader, calculate checksums
         run: python3 scripts/release.py package
 
       - name: Upload and publish release

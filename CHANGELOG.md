@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Lightweight tag-triggered GitHub release workflow: Java 25 packaging only, version/changelog/branch validation, checked JARs and SHA-256 checksums, draft upload before publication, and RC support. No Actions runs on branch pushes and no tests or benchmarks in the release job.
+- Release JAR filenames include the mod version, Minecraft version and Fabric loader type (for example `pointportals-0.0.10-mc26.2-fabric.jar`); tags remain plain `vMAJOR.MINOR.PATCH`.
 - Isolated, opt-in loading benchmark with fresh worlds, loaded/unloaded/new-target fixtures, serial and burst workloads, completed vanilla tick timings and validated JFR/operation CSV summaries. Checks reciprocal pairing, stale-target recovery, arrival identity/position/rotation, cooldown and target release after ticket expiry.
 - First three-repeat stress campaign: 1,440 verified operations, 3,423 completed tick samples and 36 successful target-release checks. Published the summary and attribution limits in `docs/loading-performance-results.md`; ordinary build still passes 35/35 GameTests.
 - JFR events for explicit synchronous portal chunk resolution, enabled by an active recording, with operation, dimension, chunk coordinates, initial loaded state and completion status.

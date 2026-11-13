@@ -136,7 +136,12 @@ The [release workflow](.github/workflows/release.yml) checks the exact tagged
 commit, branch ancestry, version and changelog before installing Java 25.
 It runs `bash ./gradlew --no-daemon jar sourcesJar`, verifies the resulting
 packages and publishes a GitHub Release with the mod JAR, sources JAR and
-`SHA256SUMS.txt`. Only the runtime JAR requires expanded version metadata;
+`SHA256SUMS.txt`. Published files include the mod version, Minecraft version and
+loader: `pointportals-0.0.10-mc26.2-fabric.jar` and
+`pointportals-0.0.10-mc26.2-fabric-sources.jar`. These names are staged in
+`build/release`; original Gradle outputs in `build/libs` are unchanged.
+The tag remains plain SemVer with a `v` prefix, such as `v0.0.10`.
+Only the runtime JAR requires expanded version metadata;
 the sources JAR includes the original resource template. RCs are prereleases;
 older stable versions do not replace a newer stable release as Latest.
 

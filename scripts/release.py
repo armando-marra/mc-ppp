@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 import zipfile
@@ -89,9 +90,14 @@ def package():
                    for name in archive.namelist()):
                 raise ValueError(f"Test/benchmark content found in {jar}")
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    checksums = "".join(f"{hashlib.sha256(jar.read_bytes()).hexdigest()}  {jar.name}\n" for jar in jars)
+    # Keep Gradle outputs unchanged; stage release assets with compatibility labels.
+    assets = [OUTPUT / f"{config['archives_base_name']}-{version}-mc{config['minecraft_version']}-fabric{suffix}.jar"
+              for suffix in ("", "-sources")]
+    for jar, asset in zip(jars, assets):
+        shutil.copyfile(jar, asset)
+    checksums = "".join(f"{hashlib.sha256(asset.read_bytes()).hexdigest()}  {asset.name}\n" for asset in assets)
     (OUTPUT / "SHA256SUMS.txt").write_text(checksums, encoding="utf-8")
-    return jars + [OUTPUT / "SHA256SUMS.txt"]
+    return assets + [OUTPUT / "SHA256SUMS.txt"]
 
 
 def latest_stable(version, existing):

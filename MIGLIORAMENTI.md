@@ -34,6 +34,11 @@ Implementazione in `.github/workflows/release.yml` e `scripts/release.py`:
 - Solo `jar sourcesJar`: nessun GameTest, benchmark, datagen o artifact intermedio.
 - Controllo dei JAR, metadata runtime, esclusione di test/benchmark e checksum;
   caricamento in bozza, controllo elenco/dimensioni allegati e pubblicazione finale.
+- Allegati rinominati automaticamente in `build/release` come
+  `pointportals-0.0.10-mc26.2-fabric.jar` e
+  `pointportals-0.0.10-mc26.2-fabric-sources.jar`; checksum riferiti ai nuovi nomi.
+  Minecraft è letto da `gradle.properties`; tag SemVer (`v0.0.10`) e output Gradle
+  originali restano invariati. Nessuna versione di launcher nel nome.
 - RC marcate prerelease; versioni stabili precedenti non promosse a Latest.
   Release esistenti, anche bozze, bloccano il job senza sovrascritture automatiche.
 - Solo `GITHUB_TOKEN`, senza PAT. Resta responsabilità locale verificare la
