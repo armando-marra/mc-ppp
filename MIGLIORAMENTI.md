@@ -2,10 +2,67 @@
 
 Aggiornato al 13 novembre 2026.
 
-## Punto di ripresa corrente — proposta CI e release automatiche
+## Punto di ripresa corrente — release leggera su tag
 
-Questa sezione è il riferimento per la prossima chat e prevale sulle note di
-ripresa storiche più sotto. Il lavoro si trova in `D:\Projects\mc-ppp`, branch
+Versione del progetto aggiornata a **0.0.10**, con sezione dedicata nel changelog.
+L'utente ha autorizzato commit e push su `devel`, quindi integrazione in `main`
+solo locale. **Il push di `main` resta in attesa di un'ulteriore indicazione
+dell'utente.** Nessun tag o nuova release è richiesto in questo incremento.
+
+Verifica della versione `0.0.10`: sei test Python e actionlint superati;
+build locale completa riuscita con **35/35 GameTest** e controllo dei JAR e
+checksum riuscito. Il primo tentativo di build ha fallito il GameTest
+`cross_dimension_game_tests_overworld_to_end` sulla visibilità dell'entità
+al tick 2; la ripetizione senza modifiche al codice è passata. Resta quindi
+un caso intermittente da approfondire separatamente, senza attribuire al
+singolo esito positivo una garanzia di stabilità della fixture.
+
+Questa sezione sostituisce la proposta CI storica sotto. Il repository è pubblico;
+l'utente ha scelto un solo workflow di release, senza rieseguire in Actions i
+test già eseguiti in locale. Nessun workflow per push/PR su `devel` o `main`.
+I benchmark estesi restano da parte e non sono stati rilanciati.
+
+Implementazione in `.github/workflows/release.yml` e `scripts/release.py`:
+
+- Trigger esclusivo sul push di tag `v*`, con validazione dei formati
+  `vMAJOR.MINOR.PATCH` e `vMAJOR.MINOR.PATCH-rc.N`.
+- Checkout del commit esatto; versione coerente con `gradle.properties`,
+  changelog dedicato, stabile raggiungibile da `origin/main` o RC da `origin/devel`.
+- Un solo job Ubuntu con Java 25, action fissate a SHA e cache Gradle base.
+  Le cache create da tag hanno riuso limitato allo stesso tag: una nuova release
+  può richiedere nuovi download. Loom fissato alla versione disponibile `1.19.4`.
+- Solo `jar sourcesJar`: nessun GameTest, benchmark, datagen o artifact intermedio.
+- Controllo dei JAR, metadata runtime, esclusione di test/benchmark e checksum;
+  caricamento in bozza, controllo elenco/dimensioni allegati e pubblicazione finale.
+- RC marcate prerelease; versioni stabili precedenti non promosse a Latest.
+  Release esistenti, anche bozze, bloccano il job senza sovrascritture automatiche.
+- Solo `GITHUB_TOKEN`, senza PAT. Resta responsabilità locale verificare la
+  revisione finale prima del tag: il workflow non certifica i test locali.
+
+Il workflow deve essere presente nel commit del tag. Nessun nuovo tag o release
+è stato creato per collaudarlo. La verifica end-to-end in GitHub Actions resta
+da effettuare durante il primo rilascio intenzionale.
+Verifiche locali dell'incremento:
+
+- `actionlint 1.7.12`: workflow valido, nessun errore.
+- Sei test Python del flusso di release superati, con chiamate GitHub simulate:
+  nessuna pubblicazione reale durante i test.
+- `jar sourcesJar --dry-run`: solo compilazione e packaging, nessun test.
+  Packaging reale riuscito e controllo dei due JAR/checksum superato.
+- Build locale completa riuscita con Loom `1.19.4`: **35/35 GameTest**.
+  È una verifica locale dell'incremento, non un task del workflow.
+- `git diff --check` pulito; nessun asset modificato, datagen non necessario.
+
+Il primo avvio Gradle locale ha incontrato `Unable to establish loopback
+connection`; risolto nel solo processo usando una directory temporanea breve
+per `jdk.net.unixdomain.tmpdir`. Nessun percorso personale o workaround Windows
+è stato inserito nel workflow. Non è stata eseguita una build Linux da cache
+vuota: tale conferma resta al primo rilascio intenzionale.
+
+## Proposta storica superata — CI e release automatiche
+
+Questa proposta è conservata come storico ed è superata dalla sezione corrente.
+Al momento della proposta il lavoro si trovava in `D:\Projects\mc-ppp`, branch
 `devel`, collegato a `origin/devel`. I commit `d7361d2` (documentazione e JFR) e
 `f8349b6` (benchmark e report) sono stati pubblicati su `origin/devel`.
 Le precedenti indicazioni «nessun push» descrivono il momento dei singoli

@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout tagged commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate release before building
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/release.py prepare
+
+      - name: Set up Java 25
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle cache and validate wrapper
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+        with:
+          cache-provider: basic
+          cache-read-only: false
+          dependency-graph: disabled
+
+      - name: Package release (no tests or benchmarks)
+        run: bash ./gradlew --no-daemon jar sourcesJar
+
+      - name: Verify JARs and calculate checksums
+        run: python3 scripts/release.py package
+
+      - name: Upload and publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/release.py publish

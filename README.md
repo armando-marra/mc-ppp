@@ -116,5 +116,43 @@ Keep machine-specific JDK paths in your user Gradle configuration, outside this 
 
 ---
 
+## Releases
+
+The current project version is **0.0.10**. Preparing this version does not
+publish a release; publication starts only after pushing its version tag.
+
+Release automation runs only when a `v*` tag is pushed. Pushes and pull requests
+on `devel` and `main` do not start Actions. Tests and benchmarks are not run by
+the release workflow; run the ordinary `./gradlew build` locally on the final
+release commit before tagging it. Benchmarks remain a separate, manual task.
+
+1. Set `mod_version` and add matching release notes in `CHANGELOG.md`, then commit.
+2. For a stable release, integrate that commit into `main` and verify it locally.
+   For a release candidate, use a commit on `devel`.
+3. Create and push the matching tag, for example `v0.0.10` or `v0.0.10-rc.1`.
+   These are examples: the current version remains defined in `gradle.properties`.
+
+The [release workflow](.github/workflows/release.yml) checks the exact tagged
+commit, branch ancestry, version and changelog before installing Java 25.
+It runs `bash ./gradlew --no-daemon jar sourcesJar`, verifies the resulting
+packages and publishes a GitHub Release with the mod JAR, sources JAR and
+`SHA256SUMS.txt`. Only the runtime JAR requires expanded version metadata;
+the sources JAR includes the original resource template. RCs are prereleases;
+older stable versions do not replace a newer stable release as Latest.
+
+One Ubuntu job uses SHA-pinned actions and the built-in `GITHUB_TOKEN` with
+`contents: write`; no personal token or additional secrets are required.
+Gradle's basic cache is enabled, but GitHub cache scope restricts reuse of
+tag-created caches to that same tag, so a new version can still need fresh
+dependency downloads. No intermediate Actions artifacts or benchmark worlds
+are uploaded. Packaging does not attest that local tests were run.
+
+Existing releases, including drafts, are never overwritten. If uploading fails,
+inspect the draft and complete it manually or remove the incomplete draft
+before rerunning the workflow; do not move the version tag. Failed runs can be
+rerun from Actions once the cause has been addressed. The workflow must be
+included in the tagged commit. Repository Actions permissions must allow its
+write token. Local validation: `python -B scripts/test_release.py`.
+
 ## 📄 License
 This project is licensed under the terms of the [MIT License](LICENSE).
