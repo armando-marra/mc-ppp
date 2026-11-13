@@ -63,22 +63,8 @@ public class TunerItem extends Item {
 				return InteractionResult.SUCCESS;
 			} else if (clickedState.getValue(TeleporterBlock.LINKED)) {
 				if (beClicked instanceof TeleporterBlockEntity entityB) {
-					PortalTarget targetA = entityB.getTwinTarget();
+					entityB.notifyTwinOfRemoval();
 					entityB.clearAndReset(true);
-
-					if (targetA != null) {
-						MinecraftServer server = level.getServer();
-						ServerLevel levelA = server != null ? server.getLevel(targetA.dimension()) : null;
-						if (levelA != null && levelA.isLoaded(targetA.pos())) {
-							BlockState stateA = levelA.getBlockState(targetA.pos());
-							if (stateA.is(ModBlocks.TELEPORTER)) {
-								BlockEntity beA = levelA.getBlockEntity(targetA.pos());
-								if (beA instanceof TeleporterBlockEntity entityA) {
-									entityA.clearAndReset(true);
-								}
-							}
-						}
-					}
 				}
 
 				level.playSound(null, clickedPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);

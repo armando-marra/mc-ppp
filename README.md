@@ -85,6 +85,10 @@ Crafts a complete matching pair in one recipe:
 - **JDK 25** (e.g. [Eclipse Temurin 25 LTS](https://adoptium.net/)) configured in `JAVA_HOME`.
 - Git.
 
+Gradle uses a Java 25 toolchain. Set `JAVA_HOME` to a JDK 25 installation
+before running the wrapper; Loom also requires Java 25 to run Gradle itself.
+Keep machine-specific JDK paths in your user Gradle configuration, outside this repository.
+
 ### Common Gradle Commands
 
 ```bash

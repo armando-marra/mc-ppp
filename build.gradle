@@ -47,6 +47,15 @@ sourceSets {
 	}
 }
 
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = "pointportals-test"
+		enableClientGameTests = false
+		eula = true
+	}
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
@@ -75,6 +84,10 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+
 	withSourcesJar()
 
 	sourceCompatibility = JavaVersion.VERSION_25
