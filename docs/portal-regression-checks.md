@@ -2,6 +2,14 @@
 
 ## Automated server tests
 
+The default compatibility baseline in `gradle.properties` is Minecraft 26.2,
+Fabric Loader 0.19.5 and Fabric API `0.159.0+26.2`. All 35 regression tests
+passed on that exact combination. The packaged runtime JAR was also loaded by
+an isolated Fabric production server using those versions: mod registration,
+world startup (`Done`) and clean shutdown succeeded. This startup check does
+not establish real-client rendering, networking or gameplay correctness with
+other mods installed. No benchmark is needed for this compatibility check.
+
 Run `./gradlew build` to compile the mod and execute the server GameTests.
 Run `./gradlew runGameTest` to run just the gameplay suite. Tests live in
 `src/gametest/java` and are excluded from the distributed mod JAR. The test

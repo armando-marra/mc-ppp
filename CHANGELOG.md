@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Lowered the minimum Fabric Loader to 0.19.5, keeping Minecraft 26.2 as the development target. Compile and test against Fabric API `0.159.0+26.2` and declare API >= 0.159.0 as the minimum instead of an unrestricted dependency.
+- Verified 35/35 GameTests and packaged-mod initialization, world startup and clean shutdown on a dedicated server with Minecraft 26.2, Loader 0.19.5 and Fabric API `0.159.0+26.2`. Published 0.0.10 and older JARs retain their original requirements.
+
 ---
 
 ## [0.0.10] - 2026-11-13

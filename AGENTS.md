@@ -26,7 +26,7 @@
 
 ## 2. Technical Stack & Coding Standards
 - **Target Platform:** Minecraft 26.2+ (Java Edition)
-- **Mod Loader:** Fabric Loader (>= 0.20.1)
+- **Mod Loader:** Fabric Loader (>= 0.19.5); Fabric API >= 0.159.0 for Minecraft 26.2.
 - **Toolchain:** Gradle 9.x with Fabric Loom 1.19+, Java 25 (`JavaCompile.release = 25`)
 - **Mappings:** Official Mojang Mappings (built into modern Fabric Loom)
 - **Base Package:** `com.project.pointportals`

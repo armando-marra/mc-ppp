@@ -1,7 +1,7 @@
 # Point-to-Point Portals (`mc-ppp`)
 
 [![Minecraft](https://img.shields.io/badge/Minecraft-26.2%2B-brightgreen.svg)](https://www.minecraft.net/)
-[![Fabric Loader](https://img.shields.io/badge/Fabric-0.20.1%2B-blue.svg)](https://fabricmc.net/)
+[![Fabric Loader](https://img.shields.io/badge/Fabric-0.19.5%2B-blue.svg)](https://fabricmc.net/)
 [![Java](https://img.shields.io/badge/Java-25-orange.svg)](https://adoptium.net/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -71,7 +71,8 @@ Crafts a complete matching pair in one recipe:
 ## 🏗️ Technical Architecture & Standards
 
 - **Target Platform:** Minecraft Java Edition 26.2+
-- **Mod Loader:** Fabric Loader >= 0.20.1
+- **Mod Loader:** Fabric Loader >= 0.19.5
+- **Fabric API:** >= 0.159.0, using the build for Minecraft 26.2
 - **Toolchain:** Gradle 9.8+, Fabric Loom 1.19+, Java 25; official Mojang mappings
 - **Data Persistence:** Modern `DataComponentType` (strictly zero legacy NBT on ItemStacks).
 - **Registries:** Built on standard Fabric API and Minecraft built-in registries.
@@ -88,6 +89,14 @@ Crafts a complete matching pair in one recipe:
 Gradle uses a Java 25 toolchain. Set `JAVA_HOME` to a JDK 25 installation
 before running the wrapper; Loom also requires Java 25 to run Gradle itself.
 Keep machine-specific JDK paths in your user Gradle configuration, outside this repository.
+
+The development baseline is Minecraft 26.2, Fabric Loader 0.19.5 and Fabric API
+`0.159.0+26.2`. This combination passes the 35 server GameTests and starts and
+stops a dedicated production server with the packaged mod. Earlier Loader
+0.19.x versions and Minecraft versions before 26.2 are not supported by this
+change. A real-client gameplay check remains separate from these automated
+tests. The relaxed requirements are currently unreleased; previously published
+0.0.10 and 0.0.9 JARs still require Loader >= 0.20.1.
 
 ### Common Gradle Commands
 

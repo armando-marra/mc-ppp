@@ -2,7 +2,42 @@
 
 Aggiornato al 13 novembre 2026.
 
-## Punto di ripresa corrente — release leggera su tag
+## Punto di ripresa corrente — compatibilità Loader 0.19.5
+
+Questa sezione prevale sulle note storiche sotto. Dopo la pubblicazione della
+release `0.0.10`, l'utente ha richiesto supporto per il proprio server con
+Minecraft 26.2, Fabric Loader 0.19.5 e Fabric API `0.159.0+26.2`.
+Non è richiesto supporto per Minecraft precedenti a 26.2.
+
+Lavoro locale su `devel`, prima riallineato in fast-forward al commit `d196bee`
+di `main`. Baseline di compilazione e test abbassata a Loader `0.19.5` e API
+`0.159.0+26.2`; metadata della mod aggiornati a Loader `>=0.19.5` e Fabric API
+`>=0.159.0`. Nessuna modifica alla logica dei portali o agli asset.
+
+Verifiche effettuate:
+
+- Build completa locale riuscita, **35/35 GameTest** con Loader `0.19.5` e API
+  `0.159.0+26.2` effettivamente riportati nel log.
+- JAR runtime caricato su server dedicato isolato con Minecraft 26.2,
+  Loader 0.19.5 e API `0.159.0+26.2`: registrazione mod, avvio mondo (`Done`)
+  e arresto pulito riusciti, senza mod di test nel server di produzione.
+- Log e ambiente temporaneo in `build/compat-loader-0.19.5-build.log` e
+  `build/compat-loader-0.19.5-server/`, esclusi dal repository.
+- Il server ha richiesto il workaround locale Windows già noto per
+  `jdk.net.unixdomain.tmpdir` (connessione loopback); non è un requisito della mod.
+- Nessun benchmark rilanciato. Prove con client reale e modpack dell'utente
+  restano distinte dalla suite e dalla verifica di avvio.
+
+Le modifiche sono ancora **Unreleased**. L'utente ha autorizzato commit e push
+su `devel` e merge in `main` locale; il push di `main` resta in attesa di una
+sua indicazione. Nessun nuovo tag o release richiesto per questo incremento.
+La versione resta `0.0.10` nel checkout; i JAR
+già pubblicati non vengono modificati e richiedono ancora Loader `>=0.20.1`.
+Prima di pubblicare la correzione, preparare una nuova versione e il changelog.
+Le note sotto sui push di main in attesa appartengono alla preparazione storica
+della release `0.0.10`, completata successivamente.
+
+## Stato precedente — release leggera su tag
 
 Versione del progetto aggiornata a **0.0.10**, con sezione dedicata nel changelog.
 L'utente ha autorizzato commit e push su `devel`, quindi integrazione in `main`

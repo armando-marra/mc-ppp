@@ -1,6 +1,6 @@
 # Point-to-Point Portals — progetto e stato
 
-**Target:** Minecraft Java Edition 26.2+, Fabric Loader >= 0.20.1.
+**Target:** Minecraft Java Edition 26.2+, Fabric Loader >= 0.19.5, Fabric API >= 0.159.0 per Minecraft 26.2.
 **Toolchain:** Java 25, Gradle 9.x, Fabric Loom 1.19+, mappings ufficiali Mojang.
 Le versioni effettive sono in `gradle.properties` e nel wrapper Gradle.
 
