@@ -2,13 +2,243 @@
 
 Aggiornato al 13 novembre 2026.
 
+## Punto di ripresa corrente — proposta CI e release automatiche
+
+Questa sezione è il riferimento per la prossima chat e prevale sulle note di
+ripresa storiche più sotto. Il lavoro si trova in `D:\Projects\mc-ppp`, branch
+`devel`, collegato a `origin/devel`. I commit `d7361d2` (documentazione e JFR) e
+`f8349b6` (benchmark e report) sono stati pubblicati su `origin/devel`.
+Le precedenti indicazioni «nessun push» descrivono il momento dei singoli
+incrementi e sono superate da questo aggiornamento.
+
+L'utente ha chiesto di documentare la proposta seguente, fare commit e push di
+questo documento e fermare il lavoro per ora. **La CI non è ancora implementata:**
+non sono stati creati workflow, nuovi tag, merge su main o nuove release.
+La versione della mod resta `0.0.9`; `v0.0.10` sotto è soltanto un esempio.
+Ultima verifica del codice: build ordinaria riuscita, **35/35 GameTest**;
+benchmark concluso con 1.440 operazioni, 3.423 tick campionati e 36 controlli
+di rilascio riusciti. Il report e i suoi limiti restano in
+[loading-performance-results.md](docs/loading-performance-results.md).
+
+### Obiettivo e file previsti
+
+Implementare due workflow separati:
+
+- `.github/workflows/ci.yml`: verifica delle modifiche a ogni push/PR pertinente.
+- `.github/workflows/release.yml`: build verificata e pubblicazione automatica
+  quando viene pubblicato sul remoto un tag di versione `v*`.
+
+Mantenere le verifiche di versione, metadata e changelog in piccoli script
+riutilizzabili, se necessario, evitando di duplicare logica complessa nei due
+YAML. Aggiornare README, CHANGELOG e questa sezione quando i workflow saranno
+effettivamente disponibili. La presente modifica è solo documentale.
+
+### CI ordinaria: trigger, ambiente e comandi
+
+| Evento | Comportamento proposto |
+| --- | --- |
+| Push su `devel` o `main` | Build completa e GameTest; JAR e diagnostica come artifact della run. |
+| Pull request verso `devel` o `main` | Stesse verifiche, senza pubblicazione di release. |
+| Avvio manuale | Verifica ordinaria; prevedere anche un'opzione per cache disabilitata. |
+
+Usare inizialmente un runner GitHub-hosted Ubuntu 24.04 con Eclipse Temurin
+Java 25, impostato tramite `actions/setup-java`. Usare il wrapper del repository,
+non un Gradle installato separatamente. Il wrapper attuale è Gradle 9.8.2.
+`gradlew` è tracciato con mode `100644`: il comando portabile per il runner
+Linux è `bash ./gradlew --no-daemon build`. Un eventuale cambio del bit
+eseguibile deve essere intenzionale e verificato, non un prerequisito implicito.
+
+`build` dipende già da `check`/`runGameTest`: non aggiungere una seconda
+esecuzione degli stessi GameTest nella medesima run. Il riferimento attuale è
+35 test (34 della mod e uno Fabric), non una costante da congelare per sempre:
+il job deve fallire per errori o test mancanti, non quando aumentano le coperture.
+Controllare il report effettivo del runner e verificare che la suite sia stata
+eseguita, oltre al solo codice di uscita della compilazione.
+
+Usare `gradle/actions/setup-gradle` per cache e validazione del wrapper;
+non affiancargli una seconda cache Gradle gestita da `setup-java`. Scegliere
+versioni delle action attuali e compatibili al momento dell'implementazione,
+fissandole a SHA verificati e annotando il riferimento di versione leggibile.
+Cache in sola lettura nelle PR; scritture limitate ai branch fidati. Per le
+verifiche ordinarie usare `contents: read`; cancellare run obsolete dello stesso
+branch/PR con una regola di concurrency, senza applicarla alle pubblicazioni.
+
+Non trasferire nel workflow i percorsi personali o i workaround Windows per
+`GRADLE_USER_HOME` e `jdk.net.unixdomain.tmpdir`: sono dettagli dell'ambiente
+locale, non requisiti di una build Ubuntu.
+
+### Artifact e diagnostica della CI
+
+- Conservare JAR della mod e sorgenti prodotti in `build/libs`, associati alla
+  revisione verificata. Questi sono artifact CI, non release pubbliche.
+- Caricare con `if: always()` i report XML dei GameTest, i log del server e gli
+  eventuali crash report. Individuare e verificare i percorsi realmente prodotti
+  da Fabric/Loom su Linux; non inventarli da quelli di un altro progetto.
+- Prevedere una retention esplicita, inizialmente 14 giorni, e un timeout del job,
+  inizialmente 30 minuti, da correggere in base alla prima esecuzione da cache vuota.
+- Non caricare mondi interi, cache Gradle, registrazioni JFR o directory `build`
+  indiscriminate: selezionare JAR e file diagnostici utili.
+- Il benchmark prestazionale resta manuale e separato. I tempi dei runner
+  condivisi non costituiscono una soglia affidabile per una CI bloccante.
+
+### Prerequisito: build riproducibile senza cache locale
+
+`gradle.properties` dichiara ancora `loom_version=1.19-SNAPSHOT`. Prima di
+considerare affidabile la pubblicazione automatica, verificare un rilascio Loom
+compatibile e disponibile e fissare quella versione. Il log locale `1.19.4`
+non dimostra da solo che quell'esatta coordinata di release sia pubblicata:
+controllare il repository ufficiale e risolvere davvero le dipendenze.
+Conservare le versioni esplicite di Minecraft, Loader e Fabric API; non
+aggiornare insieme lo stack per il solo scopo di introdurre la CI.
+
+Eseguire almeno una build da un Gradle User Home nuovo, senza ripristino della
+cache Actions e senza build cache; usare una directory isolata invece di
+cancellare la cache personale. Verificare compilazione, suite completa e
+packaging anche sul runner Linux. La cache deve accelerare una build che
+funziona già senza di essa. La conferma di questo requisito deve riportare
+il risultato effettivo, non essere dedotta dalle build Windows già riuscite.
+
+### Release: attivazione e convenzioni dei tag
+
+Usare `push` con filtro sui tag `v*`, quindi validare esplicitamente il nome:
+il filtro è più ampio di un formato di versione corretto. Convenzioni iniziali:
+
+| Tag | Versione nel progetto | Pubblicazione |
+| --- | --- | --- |
+| `v0.0.10` | `mod_version=0.0.10` | Release stabile, da un commit presente su `main`. |
+| `v0.0.10-rc.1` | `mod_version=0.0.10-rc.1` | Prerelease; può provenire da `devel` e non deve diventare la release stabile Latest. |
+
+Accettare inizialmente versioni `vMAJOR.MINOR.PATCH` ed eventuale suffisso
+`-rc.N`, con componenti numerici validi; rifiutare altri formati finché non
+saranno previsti esplicitamente. I tag possono essere creati localmente e
+pubblicati con Git oppure tramite le funzionalità GitHub che creano il tag sul
+remoto. Il trigger scelto è il tag: non aggiungere contemporaneamente un flusso
+`release: published` che esegua una seconda build/pubblicazione dello stesso tag.
+La creazione di una release per un tag già esistente è un evento diverso e non
+va usata come scorciatoia per il flusso documentato.
+
+Il workflow deve essere presente nel commit puntato dal tag. Fare checkout del
+tag/commit esatto, recuperando i riferimenti necessari per verificare `main`;
+non costruire implicitamente HEAD del branch predefinito. Per i tag stabili,
+controllare che il commit sia raggiungibile da `origin/main`; il nome del tag
+non prova l'appartenenza a un branch. Tag nuovi solo dopo i controlli del branch.
+
+### Gate prima della pubblicazione
+
+1. Validare il formato del tag e confrontarne la versione, senza la `v`, con
+   `mod_version` in `gradle.properties`. Bloccare il job se divergono; non
+   correggere o committare la versione automaticamente durante la release.
+2. Per una stabile verificare l'appartenenza a `main`; per una RC applicare la
+   convenzione prerelease esplicita. Verificare che il changelog contenga la
+   sezione di quella versione, anziché pubblicare direttamente `[Unreleased]`.
+3. Eseguire build e GameTest sul commit del tag. Generare gli allegati una sola
+   volta; la pubblicazione scarica gli artifact di quella stessa run/revisione,
+   senza ricostruirli su un altro checkout o con altre dipendenze.
+4. Ispezionare il JAR: versione corretta in `fabric.mod.json`, nome coerente con
+   la versione e assenza delle classi GameTest/benchmark nel pacchetto distribuito.
+   Verificare la presenza del JAR dei sorgenti e calcolare i checksum SHA-256.
+5. Estrarre le note dalla sola sezione della versione in `CHANGELOG.md` e passare
+   il testo tramite file, conservando le righe reali. Nessuna sostituzione delle
+   note con contenuto generato che perda i limiti descritti nel changelog.
+
+Il versionamento resta responsabilità del commit di preparazione: al momento
+la mod è `0.0.9`, quindi creare `v0.0.10` sul codice attuale deve far fallire
+il controllo, non produrre un JAR etichettato con la versione sbagliata.
+
+### Pubblicazione, permessi e ripetizione della run
+
+Prevedere un job di pubblicazione con dipendenza esplicita dai controlli/build
+riusciti. Solo quel job riceve `contents: write`, usando il `GITHUB_TOKEN` della
+run tramite GitHub CLI; per questo flusso nello stesso repository non è previsto
+un PAT personale. Validare comunque i permessi effettivi del repository.
+
+Creare la release in bozza con il tag remoto già verificato, caricare tutti gli
+allegati, controllarne l'elenco e rendere pubblica la release solo alla fine.
+La bozza è una fase tecnica del job automatico: lo stato finale desiderato è
+pubblicato, senza un'ulteriore approvazione manuale. Allegati previsti:
+
+- `pointportals-<versione>.jar`;
+- `pointportals-<versione>-sources.jar`;
+- `SHA256SUMS.txt`, relativo ai due JAR allegati.
+
+Impostare correttamente stabile/prerelease e la regola Latest: una RC non deve
+promuoversi a stabile; decidere esplicitamente come gestire eventuali stabili
+precedenti all'ultima già pubblicata. Non limitarsi all'ordine lessicografico.
+Serializzare le run sullo stesso tag senza annullare una pubblicazione in corso.
+
+Se la release è già pubblicata, fermarsi con una diagnosi chiara e non cancellare,
+sovrascrivere o spostare tag/allegati. Per una bozza lasciata dalla stessa run
+fallita, prevedere recupero controllato verificando tag, revisione e allegati,
+oppure un errore esplicito che descriva cosa riprendere. Non mascherare fallimenti
+di caricamento pubblicando una release incompleta. Non creare release reali o
+tag fittizi durante la verifica iniziale dei workflow.
+
+### Flusso operativo desiderato
+
+1. Sviluppare su `devel` con CI verde.
+2. Preparare versione e sezione changelog in un commit coerente su `devel`.
+3. Integrare su `main` tramite PR con CI riuscita.
+4. Creare e pubblicare il tag di versione sul commit di `main` verificato.
+5. Actions verifica, costruisce e pubblica automaticamente la GitHub Release.
+6. Per una candidata, usare il tag `-rc.N` sul commit preparato di `devel`;
+   per la stabile preparare la versione senza suffisso e integrare su `main`.
+
+La configurazione dei controlli richiesti per il merge sarà valutata dopo la
+prima esecuzione positiva, usando i nomi effettivi dei job. Non presumere che
+aggiungere YAML abiliti automaticamente la protezione dei branch.
+
+### Incrementi e criteri di completamento della prossima sessione
+
+**Incremento 1 — CI ordinaria e base riproducibile:** verificare/pinnare Loom,
+implementare `ci.yml`, provare cache vuota e build completa, controllare JAR e
+conservazione dei log. Pubblicare su `devel` e osservare la run GitHub fino al
+risultato; una verifica locale del solo YAML non dimostra che la CI funzioni.
+
+**Incremento 2 — release automatica:** implementare `release.yml` e gli script
+di validazione. Provare localmente i casi positivo, versione divergente, tag
+malformato, changelog mancante e RC; controllare la selezione degli artifact e
+la dipendenza del job di pubblicazione. La prima pubblicazione vera resta da
+verificare quando si deciderà intenzionalmente di rilasciare una versione.
+Documentare separatamente ciò che è verificato localmente, in Actions e con
+una release effettiva. Un eventuale controllo datagen degli asset sarà aggiunto
+con esecuzione headless verificata su Linux, senza duplicare i GameTest.
+
+Nella ripresa proporre prima un incremento circoscritto, quindi implementare,
+eseguire `gradlew build`, correggere i problemi e registrare le verifiche reali.
+Non rilanciare automaticamente il benchmark lungo: i risultati e i suoi limiti
+sono già conservati e questo lavoro riguarda la CI.
+
+### Riferimenti ufficiali della proposta
+
+- [Eventi e trigger GitHub Actions](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#push).
+- [Permessi dei workflow](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions).
+- [GitHub CLI: creazione release](https://cli.github.com/manual/gh_release_create).
+- [Setup Java](https://github.com/actions/setup-java).
+- [Gradle Actions: setup, cache e wrapper](https://github.com/gradle/actions/blob/main/docs/setup-gradle.md).
+
+### Prompt da incollare nella nuova chat
+
+> Riprendi lo sviluppo in D:\Projects\mc-ppp sul branch devel. Leggi AGENTS.md,
+> MIGLIORAMENTI.md dalla sezione «Punto di ripresa corrente — proposta CI e
+> release automatiche» e PROJECT_DESIGN.md. La documentazione/JFR (d7361d2) e il
+> benchmark (f8349b6) sono già pubblicati su origin/devel; il benchmark ha
+> validato 1.440 operazioni e l'ultima build del codice supera 35/35 GameTest.
+> Verifica prima stato Git e allineamento al remoto, conservando eventuali
+> modifiche locali. Avvia il primo incremento del piano CI: verifica una versione
+> Loom compatibile e fissa, implementa ci.yml con Java 25, build/GameTest, artifact
+> e diagnostica, e verifica anche la build senza cache. Segui il ciclo iterativo,
+> aggiorna MIGLIORAMENTI.md, crea commit coerenti e fai push su devel; segui la
+> run GitHub fino al risultato. Il passo successivo è release.yml secondo il
+> piano documentato. Non creare tag, release reali o merge su main per collaudare
+> la pipeline e non rilanciare il benchmark lungo senza necessità.
+
 ## Benchmark dei caricamenti su devel — completato
 
 Base documentale e strumentazione registrate nel commit `d7361d2`.
 Il secondo incremento aggiunge il banco GameTest opt-in, il runner con mondi
 nuovi, misure di chiamate/operazioni/tick e report CSV/JSON correlati a JFR.
-Codice e risultati sono raccolti nel commit dedicato al benchmark su `devel`.
-Nessun push e nessuna modifica alla politica sincrona del trasporto.
+Codice e risultati sono raccolti nel commit `f8349b6`, pubblicato su
+`origin/devel`. Nessuna modifica alla politica sincrona del trasporto.
 
 **Campagna conclusiva:** `build/benchmarks/20261113-172415-3c7ea9ca`, 30 richieste
 singole a intervallo di un tick e raffiche da 10, tre ripetizioni delle 12
