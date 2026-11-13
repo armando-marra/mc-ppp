@@ -18,9 +18,11 @@ non costituiscono lo stato corrente.
    Commit: `9cc95b2`.
 2. Chunk scaricati e scadenza ticket: integrati entrambi i casi.
    Build riuscita con 26/26 GameTest; diff --check pulito.
+   Commit: `e67aa16`.
+3. Tuner tra dimensioni: integrati collegamento/scollegamento, destinazione
+   occupata e sorgente distrutta, con useOn reale in entrambe le dimensioni.
+   Build riuscita con 29/29 GameTest; diff --check pulito.
    Commit: quello di questo incremento (hash nel passo seguente).
-3. Tuner tra dimensioni: implementazione conservata, da integrare nel terzo
-   commit e verificare con 29/29 GameTest.
 4. Giocatori ed End: implementazione conservata, da integrare nel quarto
    commit e verificare con 35/35 GameTest.
 

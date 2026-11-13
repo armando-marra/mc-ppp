@@ -27,6 +27,9 @@ Tuner tests invoke the actual item interaction with a mock survival player.
 They check component selection, pairing and power state, self-link refusal,
 occupied endpoints, a source claimed by a second tuner, a destroyed source,
 selection cancellation, manual unlinking, and interaction with ordinary blocks.
+Three further tuner tests exercise cross-dimension pairing/unlinking, occupied
+destination rejection, and destroyed-source selection recovery using actual
+item interactions in both levels. Client feedback still needs manual coverage.
 
 Chunk lifecycle tests wait for a real remote unload, retain the link without
 loading the twin for 45 ticks, then remove the source and reload/reconcile the

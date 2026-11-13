@@ -16,11 +16,87 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class TunerGameTests {
+	@GameTest
+	public void crossDimensionPairAndUnlink(GameTestHelper test) {
+		crossDimensionTuner(test, 0);
+	}
+
+	@GameTest
+	public void crossDimensionOccupiedDestinationIsPreserved(GameTestHelper test) {
+		crossDimensionTuner(test, 1);
+	}
+
+	@GameTest
+	public void crossDimensionMissingSourceClearsSelection(GameTestHelper test) {
+		crossDimensionTuner(test, 2);
+	}
+
+	// Supplies the embedded connection used by the real dimension transfer.
+	@SuppressWarnings("removal")
+	private static void crossDimensionTuner(GameTestHelper test, int scenario) {
+		var remote = test.getLevel().getServer().getLevel(Level.NETHER);
+		test.assertTrue(remote != null, "Nether must exist");
+		var a = portal(test, A);
+		var c = portal(test, C);
+		var pos = new BlockPos(a.getBlockPos().getX(), 240, a.getBlockPos().getZ());
+		remote.getChunk(pos);
+		remote.setBlock(pos, ModBlocks.TELEPORTER.defaultBlockState(), Block.UPDATE_ALL);
+		var b = (TeleporterBlockEntity) remote.getBlockEntity(pos);
+		var player = test.makeMockServerPlayerInLevel();
+		var stack = new ItemStack(ModItems.TUNER);
+		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+		try {
+			test.setBlock(A.below(), Blocks.REDSTONE_BLOCK);
+			if (scenario == 1) {
+				c.setTwinTarget(PortalTarget.of(remote, pos));
+				b.setTwinTarget(PortalTarget.of(test.getLevel(), c.getBlockPos()));
+				test.setBlock(C, c.getBlockState().setValue(TeleporterBlock.LINKED, true));
+				remote.setBlock(pos, b.getBlockState().setValue(TeleporterBlock.LINKED, true), Block.UPDATE_ALL);
+			}
+			test.assertTrue(click(player, a.getBlockPos()) == InteractionResult.SUCCESS, "Source selection must succeed");
+			var selection = stack.get(ModDataComponents.PORTAL_TARGET);
+			if (scenario == 2) test.setBlock(A, Blocks.AIR);
+			test.assertTrue(player.teleportTo(remote, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
+				java.util.Set.of(), 0, 0, true), "Simulated player must reach remote interaction dimension");
+			var result = click(player, pos);
+			if (scenario == 0) {
+				test.assertTrue(result == InteractionResult.SUCCESS, "Cross-dimension pairing must succeed");
+				assertPair(test, a, b);
+				test.assertTrue(stack.get(ModDataComponents.PORTAL_TARGET) == null, "Pairing clears selection");
+				test.assertTrue(a.getBlockState().getValue(TeleporterBlock.POWERED) && !b.getBlockState().getValue(TeleporterBlock.POWERED), "Power must be sampled independently in each dimension");
+				player.setShiftKeyDown(true);
+				test.assertTrue(click(player, pos) == InteractionResult.SUCCESS, "Remote sneak click must unlink pair");
+				assertUnlinked(test, a);
+				assertUnlinked(test, b);
+			} else if (scenario == 1) {
+				test.assertTrue(result == InteractionResult.FAIL, "Occupied remote portal must reject pairing");
+				assertPair(test, c, b);
+				assertUnlinked(test, a);
+				test.assertTrue(selection.equals(stack.get(ModDataComponents.PORTAL_TARGET)), "Rejected destination must retain selection");
+			} else {
+				test.assertTrue(result == InteractionResult.FAIL, "Missing source in another dimension must reject pairing");
+				test.assertTrue(stack.get(ModDataComponents.PORTAL_TARGET) == null, "Obsolete selection must be cleared");
+				assertUnlinked(test, b);
+			}
+			test.succeed();
+		} finally {
+			test.getLevel().getServer().getPlayerList().remove(player);
+			player.discard();
+			remote.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+		}
+	}
+
+	private static InteractionResult click(Player player, BlockPos pos) {
+		return ModItems.TUNER.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND,
+			new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false)));
+	}
 	private static final BlockPos A = new BlockPos(1, 1, 1);
 	private static final BlockPos B = new BlockPos(4, 1, 1);
 	private static final BlockPos C = new BlockPos(4, 1, 4);
