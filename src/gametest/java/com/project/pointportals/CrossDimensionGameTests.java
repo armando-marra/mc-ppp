@@ -66,9 +66,43 @@ public class CrossDimensionGameTests {
 		transfer(test, reverse, Level.NETHER);
 	}
 
+	@GameTest
+	public void overworldToEnd(GameTestHelper test) {
+		transfer(test, false, Level.END);
+	}
 
+	@GameTest
+	public void endToOverworld(GameTestHelper test) {
+		transfer(test, true, Level.END);
+	}
 
 	private static void transfer(GameTestHelper test, boolean reverse, ResourceKey<Level> dimension) {
+		transfer(test, reverse, dimension, false);
+	}
+
+	@GameTest
+	public void playerOverworldToNether(GameTestHelper test) {
+		transfer(test, false, Level.NETHER, true);
+	}
+
+	@GameTest
+	public void playerNetherToOverworld(GameTestHelper test) {
+		transfer(test, true, Level.NETHER, true);
+	}
+
+	@GameTest
+	public void playerOverworldToEnd(GameTestHelper test) {
+		transfer(test, false, Level.END, true);
+	}
+
+	@GameTest
+	public void playerEndToOverworld(GameTestHelper test) {
+		transfer(test, true, Level.END, true);
+	}
+
+	// This helper supplies the embedded network connection required by ServerPlayer.teleport.
+	@SuppressWarnings("removal")
+	private static void transfer(GameTestHelper test, boolean reverse, ResourceKey<Level> dimension, boolean playerTransfer) {
 		var pair = new DimensionPair(test, 0, dimension);
 		try {
 			ServerLevel source = reverse ? pair.otherLevel : test.getLevel();
@@ -77,7 +111,18 @@ public class CrossDimensionGameTests {
 			BlockPos destinationPos = reverse ? pair.local : pair.remote;
 			var a = (TeleporterBlockEntity) source.getBlockEntity(sourcePos);
 			var b = (TeleporterBlockEntity) destination.getBlockEntity(destinationPos);
-			var pig = EntityTypes.PIG.spawn(source, sourcePos.above(), EntitySpawnReason.COMMAND);
+			Entity pig;
+			if (playerTransfer) {
+				var player = test.makeMockServerPlayerInLevel();
+				pair.testEntity = player;
+				test.assertTrue(player.teleportTo(source, sourcePos.getX() + 0.5, sourcePos.getY() + 1,
+					sourcePos.getZ() + 0.5, java.util.Set.of(), 0, 0, true), "Player must reach source dimension");
+				player.setPortalCooldown(0);
+				player.setNoGravity(true);
+				pig = player;
+			} else {
+				pig = EntityTypes.PIG.spawn(source, sourcePos.above(), EntitySpawnReason.COMMAND);
+			}
 			test.assertTrue(pig != null, "Test pig must spawn");
 			pair.testEntity = pig;
 			if (pig instanceof net.minecraft.world.entity.Mob mob) mob.setNoAi(true);
@@ -93,6 +138,12 @@ public class CrossDimensionGameTests {
 					var arrivals = destination.getEntities((Entity) null, new AABB(destinationPos).inflate(4), e -> e.getUUID().equals(uuid));
 					test.assertTrue(arrivals.size() == 1, "Exactly one entity with the original UUID must exist in destination");
 					Entity arrived = arrivals.getFirst();
+					if (playerTransfer) {
+						test.assertTrue(arrived == pair.testEntity && arrived.level() == destination,
+							"Player transfer must retain the same player in destination level");
+						test.assertTrue(destination.getServer().getPlayerList().getPlayers().stream()
+							.filter(p -> p.getUUID().equals(uuid)).count() == 1, "Server must retain exactly one registered player");
+					}
 					test.assertTrue(Math.abs(arrived.getX() - destinationPos.getX() - 0.5) < 0.01 &&
 						Math.abs(arrived.getY() - destinationPos.getY() - 1.0) < 0.01 &&
 						Math.abs(arrived.getZ() - destinationPos.getZ() - 0.5) < 0.01, "Arrival must use exact portal coordinates without Nether scaling");
@@ -172,6 +223,9 @@ public class CrossDimensionGameTests {
 		public void close() {
 			otherLevel.getChunk(remote);
 			if (testEntity != null) {
+				if (testEntity instanceof net.minecraft.server.level.ServerPlayer player) {
+					overworld.getServer().getPlayerList().remove(player);
+				}
 				var uuid = testEntity.getUUID();
 				for (var level : new ServerLevel[] {overworld, otherLevel}) {
 					BlockPos pos = level == overworld ? local : remote;

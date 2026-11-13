@@ -17,6 +17,13 @@ Arrival assertions run two ticks after transfer, with both portals kept intact
 until verification and fixture cleanup on success or assertion failure. Transfers
 use vanilla's expiring portal ticket to activate an otherwise idle destination;
 loading its blocks alone does not keep the arriving entity accessible.
+The same arrival checks also cover pigs travelling Overworld-to-End and
+End-to-Overworld, and registered mock ServerPlayers travelling both directions
+between Overworld/Nether and Overworld/End. Player tests additionally verify
+object identity, destination level and exactly one registration in the server
+player list. Their embedded connection does not establish real-client UI or
+dimension-change acknowledgement correctness; check those manually.
+
 Persistence tests exercise the actual BlockEntity save/load APIs (including
 full metadata reconstruction), reciprocal destinations, unlinked portals,
 missing/malformed data, missing dimensions, blockstate reconciliation, and
