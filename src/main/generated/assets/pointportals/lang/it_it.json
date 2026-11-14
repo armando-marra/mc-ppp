@@ -1,0 +1,18 @@
+{
+  "block.pointportals.teleporter": "Teletrasportatore punto a punto",
+  "item.pointportals.tuner": "Sintonizzatore di fase",
+  "message.pointportals.already_linked": "Questo portale è già collegato a un’altra destinazione.",
+  "message.pointportals.cannot_self_link": "Non puoi collegare un portale a se stesso!",
+  "message.pointportals.destination_obstructed": "Il portale di destinazione è ostruito!",
+  "message.pointportals.first_portal_selected": "Primo portale selezionato alle coordinate [%s, %s, %s]. Seleziona il portale di destinazione.",
+  "message.pointportals.invalid_dimension": "La dimensione di destinazione non è attualmente accessibile.",
+  "message.pointportals.portals_linked": "Portali abbinati! Alimentali con redstone per attivarli.",
+  "message.pointportals.portals_unlinked": "Collegamento tra i portali rimosso.",
+  "message.pointportals.source_portal_missing": "Il primo portale non è stato trovato oppure è stato distrutto!",
+  "message.pointportals.status_active": "Teletrasportatore collegato a %s alle coordinate [%s, %s, %s] (Attivo).",
+  "message.pointportals.status_standby": "Teletrasportatore collegato a %s alle coordinate [%s, %s, %s] (In attesa: richiede redstone).",
+  "message.pointportals.status_unlinked": "Il teletrasportatore non è collegato. Usa un sintonizzatore di fase per abbinarlo.",
+  "message.pointportals.tuner_cleared": "Memoria del sintonizzatore di fase cancellata.",
+  "tooltip.pointportals.tuner_target": "Selezione: %s alle coordinate [%s, %s, %s]",
+  "tooltip.pointportals.tuner_unbound": "Fai clic destro su un teletrasportatore non collegato per iniziare l’abbinamento."
+}

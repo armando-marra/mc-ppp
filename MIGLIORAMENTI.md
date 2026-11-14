@@ -1,8 +1,86 @@
 # Stato dei miglioramenti
 
-Aggiornato al 13 novembre 2026.
+Aggiornato al 14 novembre 2026.
 
-## Punto di ripresa corrente — compatibilità Loader 0.19.5
+## Punto di ripresa corrente — release 0.1.0
+
+Versione portata a **0.1.0**. Include la correzione del clic destro del Phase
+Tuner, tre nuovi test di interazione (38 totali), quattro lingue aggiuntive,
+texture originali del tuner e del Teleporter e ricette illustrate nel README.
+Aggiornati changelog, documentazione di progetto e regressione. I riferimenti
+a `0.0.11` nelle sezioni successive descrivono le verifiche svolte prima del
+cambio versione e restano come storico.
+
+Verifiche della versione 0.1.0: `runDatagen` e build completa riusciti,
+**38/38 GameTest**, sei test dello script di release superati. Packaging locale
+verificato con JAR runtime e sorgenti, metadata 0.1.0, checksum SHA-256, cinque
+lingue complete e riferimenti alle texture originali risolti nel JAR.
+
+L'utente ha autorizzato commit e push su `main`, poi creazione e push del tag
+`v0.1.0`, che avvia il workflow di release. Prove nel client reale ancora da
+effettuare; le intermittenze delle asserzioni UUID al tick 2 restano documentate.
+
+## Texture approvate del Teleporter integrate
+
+Integrato il design approvato «Rame e ossidiana»: nove PNG 32×32 copiati in
+`src/main/resources/assets/pointportals/textures/block/`, con alto/lato/fondo
+dedicati a inattivo, standby e attivo. Il provider Fabric genera i tre modelli
+con queste risorse; l'item usa il modello inattivo. Mappatura delle quattro
+varianti LINKED/POWERED e meccaniche invariate. Aggiornate l'immagine della
+ricetta nel README, l'anteprima e la documentazione del design approvato.
+
+`runDatagen` e build completa riusciti, **38/38 GameTest**. Verificati nel JAR
+tutti i nove PNG (identici a quelli approvati), i tre modelli e il modello item;
+verificate dimensioni, opacità e le quattro varianti del blockstate.
+L'aspetto nel client reale resta da verificare. Versione del JAR ancora `0.0.11`.
+
+## Texture originale del Phase Tuner
+
+Sostituita l'icona vanilla dell'ametista con uno sprite originale RGBA 32×32:
+impugnatura scura, montatura di rame, cristallo viola e inserto redstone.
+Sorgente generata con imagegen conservata in `docs/artwork/`; asset runtime in
+`src/main/resources/assets/pointportals/textures/item/tuner.png`. Modello item
+aggiornato tramite datagen a `pointportals:item/tuner`, senza cambiare ricetta.
+Aggiornati renderer delle ricette e immagine del README per usare la nuova icona.
+
+`runDatagen` riuscito; verificati dimensioni, alpha, risorsa nel JAR e riferimento
+del modello. Prima build con due fallimenti sulla visibilità UUID al tick 2 nei
+trasferimenti del giocatore Overworld→End/Nether; ripetizione senza modifiche
+riuscita, **38/38 GameTest**. Verifica grafica nel client reale ancora da effettuare.
+
+## Lingue aggiuntive
+
+Aggiunti provider Fabric Data Generation per italiano (`it_it`), spagnolo
+(`es_es`), francese (`fr_fr`) e tedesco (`de_de`), oltre all'inglese esistente.
+Ogni lingua include tutte le 16 chiavi: nomi degli oggetti, suggerimenti e
+messaggi di selezione, collegamento, stato ed errore. La lingua è quella
+selezionata nel client Minecraft, senza impostazioni aggiuntive della mod.
+
+`runDatagen` riuscito; controllati JSON UTF-8, parità delle chiavi con `en_us`,
+segnaposto e copertura di tutti i messaggi/suggerimenti usati dal codice.
+La prima build completa ha incontrato il caso intermittente già documentato
+`cross_dimension_game_tests_overworld_to_end` (visibilità UUID al tick 2).
+Ripetizione senza modifiche al codice riuscita: **38/38 GameTest**, build
+completa superata. Verificata anche la presenza e corrispondenza delle cinque
+risorse lingua nel JAR runtime `build/libs/pointportals-0.0.11.jar`.
+La visualizzazione con client reale resta da verificare.
+
+## Stato precedente — clic del Phase Tuner
+
+Corretto il clic destro sul Teleporter con Phase Tuner: il blocco restituiva
+il messaggio di stato da `useWithoutItem` prima che Minecraft chiamasse
+`TunerItem.useOn`. Ora `useItemOn` restituisce `PASS` per il tuner, lasciando
+proseguire la selezione e l'abbinamento; l'ispezione ordinaria resta disponibile.
+
+Tre nuovi GameTest passano da `ServerPlayerGameMode.useItemOn` e verificano
+selezione, abbinamento, scollegamento con Shift e ispezione a mano vuota:
+mano principale in Survival/Creative e chiamata della mano secondaria.
+Prima della correzione fallivano i due casi della mano principale.
+Build completa riuscita dopo la correzione: **38/38 GameTest**.
+La verifica con client reale resta da effettuare. Correzione locale, senza
+nuova release; il JAR generato conserva la versione `0.0.11`.
+
+## Stato precedente — compatibilità Loader 0.19.5
 
 Questa sezione prevale sulle note storiche sotto. Dopo la pubblicazione della
 release `0.0.10`, l'utente ha richiesto supporto per il proprio server con

@@ -3,8 +3,8 @@
 ## Automated server tests
 
 The default compatibility baseline in `gradle.properties` is Minecraft 26.2,
-Fabric Loader 0.19.5 and Fabric API `0.159.0+26.2`. All 35 regression tests
-passed on that exact combination. The packaged runtime JAR was also loaded by
+Fabric Loader 0.19.5 and Fabric API `0.159.0+26.2`. The 0.1.0 suite contains
+38 regression tests. The 0.0.11 packaged runtime JAR was also loaded by
 an isolated Fabric production server using those versions: mod registration,
 world startup (`Done`) and clean shutdown succeeded. This startup check does
 not establish real-client rendering, networking or gameplay correctness with
@@ -38,6 +38,13 @@ missing/malformed data, missing dimensions, blockstate reconciliation, and
 the full tuner ItemStack codec with its selected-target component. They do
 not restart the server; the save-and-reopen check below remains necessary.
 
+Three tuner regression tests additionally invoke `ServerPlayerGameMode.useItemOn`
+instead of calling the item directly: main-hand Survival/Creative and offhand
+dispatch. They verify selection, pairing, sneak unlinking and empty-hand inspection.
+The main-hand cases reproduced the block status interaction consuming the click
+before `TunerItem.useOn`; the fixed full build passes all 38 tests. A real-client
+click check remains necessary, including main-hand/offhand selection by the client.
+
 Tuner tests invoke the actual item interaction with a mock survival player.
 They check component selection, pairing and power state, self-link refusal,
 occupied endpoints, a source claimed by a second tuner, a destroyed source,
@@ -62,10 +69,17 @@ instead of the regression suites and creates a fresh run directory. It checks
 loaded/unloaded/new-target fixtures, actual tuner interactions and transfers,
 missing-target recovery, reciprocal links, arrival identity/position/rotation,
 cooldown and eventual target unload after fixture and vanilla tickets expire.
-The normal build still selects all five regression suites (35 total tests,
+The normal build still selects all five regression suites (38 total tests,
 including Fabric's own test); benchmark classes are never distributed in the JAR.
 
 ## Manual checks
+
+The 0.1.0 asset checks verify all nine approved Teleporter faces, the Phase Tuner
+sprite, model references, four blockstate variants, and five complete language
+files in the runtime JAR. Real-client texture rendering and language switching
+remain manual checks. Tick-2 arrival assertions have intermittently failed for
+End transfers and mock-player Overworld-to-Nether transfers; passing reruns do
+not resolve that fixture timing concern.
 
 Run `./gradlew build`, then `./gradlew runClient`. Use a disposable creative
 world with commands enabled. These are manual checks; a successful build alone

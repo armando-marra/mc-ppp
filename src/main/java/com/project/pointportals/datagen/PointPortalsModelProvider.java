@@ -53,21 +53,21 @@ public class PointPortalsModelProvider implements DataProvider {
 
 		// 2. Block Models (Inactive, Standby, Active)
 		futures.add(DataProvider.saveStable(output, createCubeBottomTopModel(
-			"minecraft:block/respawn_anchor_top_off",
-			"minecraft:block/obsidian",
-			"minecraft:block/chiseled_copper"
+			"pointportals:block/teleporter_inactive_top",
+			"pointportals:block/teleporter_inactive_bottom",
+			"pointportals:block/teleporter_inactive_side"
 		), blockModels.json(PointPortals.id("teleporter_inactive"))));
 
 		futures.add(DataProvider.saveStable(output, createCubeBottomTopModel(
-			"minecraft:block/crying_obsidian",
-			"minecraft:block/obsidian",
-			"minecraft:block/chiseled_copper"
+			"pointportals:block/teleporter_standby_top",
+			"pointportals:block/teleporter_standby_bottom",
+			"pointportals:block/teleporter_standby_side"
 		), blockModels.json(PointPortals.id("teleporter_standby"))));
 
 		futures.add(DataProvider.saveStable(output, createCubeBottomTopModel(
-			"minecraft:block/respawn_anchor_top",
-			"minecraft:block/obsidian",
-			"minecraft:block/chiseled_copper"
+			"pointportals:block/teleporter_active_top",
+			"pointportals:block/teleporter_active_bottom",
+			"pointportals:block/teleporter_active_side"
 		), blockModels.json(PointPortals.id("teleporter_active"))));
 
 		// 3. Item Models
@@ -78,7 +78,7 @@ public class PointPortalsModelProvider implements DataProvider {
 		JsonObject tunerItemModel = new JsonObject();
 		tunerItemModel.addProperty("parent", "minecraft:item/generated");
 		JsonObject tunerTextures = new JsonObject();
-		tunerTextures.addProperty("layer0", "minecraft:item/amethyst_shard");
+		tunerTextures.addProperty("layer0", "pointportals:item/tuner");
 		tunerItemModel.add("textures", tunerTextures);
 		futures.add(DataProvider.saveStable(output, tunerItemModel, itemModels.json(PointPortals.id("tuner"))));
 

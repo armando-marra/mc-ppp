@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0] - 2026-11-14
+
+### Added
+- Complete Italian (`it_it`), Spanish (`es_es`), French (`fr_fr`) and German (`de_de`) translations for item names, tooltips and gameplay messages, generated alongside English.
+- Original transparent 32×32 Phase Tuner texture with an obsidian grip, copper mount, violet crystal and redstone inset.
+- Original copper-and-obsidian Teleporter textures: nine 32×32 faces covering inactive, standby and active states, with matching inventory appearance.
+- Three server interaction regression tests covering the Phase Tuner through the normal player interaction dispatcher in Survival/Creative and offhand dispatch.
+- Illustrated crafting recipes using actual game/mod textures, artwork previews and scripts to regenerate documentation images.
+
+### Fixed
+- Right-clicking a Teleporter with the Phase Tuner now reaches the tool's pairing interaction instead of being consumed by the block's status message.
+- Corrected the README's Phase Tuner recipe description: amethyst shard above an Ender Pearl above a Blaze Rod.
+
+### Changed
+- Updated gameplay, localization, artwork and regression documentation for 0.1.0. Recipes, exclusive bidirectional links, Redstone requirements and cooldown behavior are unchanged.
+- Regression suite now contains 38 tests. Real-client visual/gameplay checks remain separate; intermittent tick-2 cross-dimension arrival assertions observed during development are documented.
+
+---
+
 ## [0.0.11] - 2026-11-13
 
 ### Changed

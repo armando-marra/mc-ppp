@@ -1,0 +1,18 @@
+{
+  "block.pointportals.teleporter": "Teletransportador punto a punto",
+  "item.pointportals.tuner": "Sintonizador de fase",
+  "message.pointportals.already_linked": "Este portal ya está vinculado a otro destino.",
+  "message.pointportals.cannot_self_link": "¡No puedes vincular un portal consigo mismo!",
+  "message.pointportals.destination_obstructed": "¡El portal de destino está obstruido!",
+  "message.pointportals.first_portal_selected": "Primer portal seleccionado en [%s, %s, %s]. Selecciona el portal de destino.",
+  "message.pointportals.invalid_dimension": "La dimensión de destino no está accesible en este momento.",
+  "message.pointportals.portals_linked": "¡Portales emparejados! Aliméntalos con redstone para activarlos.",
+  "message.pointportals.portals_unlinked": "Portales desvinculados.",
+  "message.pointportals.source_portal_missing": "¡No se encontró el primer portal o fue destruido!",
+  "message.pointportals.status_active": "Teletransportador vinculado a %s en [%s, %s, %s] (Activo).",
+  "message.pointportals.status_standby": "Teletransportador vinculado a %s en [%s, %s, %s] (En espera: requiere redstone).",
+  "message.pointportals.status_unlinked": "El teletransportador no está vinculado. Usa un sintonizador de fase para emparejarlo.",
+  "message.pointportals.tuner_cleared": "Memoria del sintonizador de fase borrada.",
+  "tooltip.pointportals.tuner_target": "Selección: %s en [%s, %s, %s]",
+  "tooltip.pointportals.tuner_unbound": "Haz clic derecho en un teletransportador sin vincular para iniciar el emparejamiento."
+}

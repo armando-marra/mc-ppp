@@ -12,6 +12,10 @@ public class PointPortalsDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(PointPortalsBlockLootTableProvider::new);
 		pack.addProvider(PointPortalsRecipeProvider::new);
 		pack.addProvider(PointPortalsEnglishLangProvider::new);
+		pack.addProvider(PointPortalsItalianLangProvider::new);
+		pack.addProvider(PointPortalsSpanishLangProvider::new);
+		pack.addProvider(PointPortalsFrenchLangProvider::new);
+		pack.addProvider(PointPortalsGermanLangProvider::new);
 		pack.addProvider(PointPortalsModelProvider::new);
 	}
 }

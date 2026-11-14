@@ -1,5 +1,7 @@
 # Point-to-Point Portals — progetto e stato
 
+**Versione:** 0.1.0.
+
 **Target:** Minecraft Java Edition 26.2+, Fabric Loader >= 0.19.5, Fabric API >= 0.159.0 per Minecraft 26.2.
 **Toolchain:** Java 25, Gradle 9.x, Fabric Loom 1.19+, mappings ufficiali Mojang.
 Le versioni effettive sono in `gradle.properties` e nel wrapper Gradle.
@@ -37,8 +39,18 @@ Non esiste una modalità configurabile di attivazione tramite sneak.
 La ricetta produce due portali con quattro ossidiane agli angoli, due lingotti
 di rame sopra/sotto e due polveri di Redstone ai lati dell'occhio di Ender.
 Il tuner usa una colonna di ametista, perla di Ender e verga di Blaze.
+Il Teleporter usa nove texture originali 32×32 (alto, lato e fondo per ciascuno
+dei tre stati): cornice di rame, corpo di ossidiana, rune scure da scollegato,
+indicatori ciano tenui in standby e nucleo ciano/viola da attivo.
+L'item in inventario usa il modello inattivo; le quattro varianti LINKED/POWERED
+mantengono la mappatura ai tre stati visivi.
+Il Phase Tuner ha una texture originale trasparente 32×32: impugnatura di
+ossidiana, montatura di rame, nucleo viola e inserto redstone. Il modello item
+generato usa `pointportals:item/tuner`; la ricetta resta invariata.
 `FabricDataGenerator` genera modelli per tutte le combinazioni di BlockState,
-modelli item, ricette, avanzamenti, loot, tag e localizzazione inglese.
+modelli item, ricette, avanzamenti, loot, tag e localizzazioni inglese (`en_us`),
+italiana (`it_it`), spagnola (`es_es`), francese (`fr_fr`) e tedesca (`de_de`).
+Nomi, suggerimenti e messaggi seguono la lingua selezionata dal client.
 Suoni e particelle usano quelli vanilla.
 
 ## Architettura e sviluppo

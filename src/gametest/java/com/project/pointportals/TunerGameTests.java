@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +24,56 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class TunerGameTests {
+	@GameTest
+	public void playerRightClickPairsPortalsInSurvival(GameTestHelper test) {
+		playerRightClickPairsPortals(test, GameType.SURVIVAL, InteractionHand.MAIN_HAND);
+	}
+
+	@GameTest
+	public void playerRightClickPairsPortalsInCreative(GameTestHelper test) {
+		playerRightClickPairsPortals(test, GameType.CREATIVE, InteractionHand.MAIN_HAND);
+	}
+
+	@GameTest
+	public void playerOffhandRightClickPairsPortals(GameTestHelper test) {
+		playerRightClickPairsPortals(test, GameType.SURVIVAL, InteractionHand.OFF_HAND);
+	}
+
+	@SuppressWarnings("removal")
+	private static void playerRightClickPairsPortals(GameTestHelper test, GameType mode, InteractionHand hand) {
+		var a = portal(test, A);
+		var b = portal(test, B);
+		var player = test.makeMockServerPlayerInLevel();
+		player.setGameMode(mode);
+		var stack = new ItemStack(ModItems.TUNER);
+		player.setItemInHand(hand, stack);
+		try {
+			test.assertTrue(playerClick(player, hand, a.getBlockPos()).consumesAction(), "First player click must succeed");
+			test.assertTrue(PortalTarget.of(test.getLevel(), a.getBlockPos()).equals(stack.get(ModDataComponents.PORTAL_TARGET)),
+				"Normal player interaction must reach the tuner and store the first portal");
+			test.assertTrue(playerClick(player, hand, b.getBlockPos()).consumesAction(), "Second player click must succeed");
+			assertPair(test, a, b);
+			test.assertTrue(!stack.has(ModDataComponents.PORTAL_TARGET), "Pairing must clear the tuner selection");
+			player.setShiftKeyDown(true);
+			test.assertTrue(playerClick(player, hand, a.getBlockPos()).consumesAction(), "Sneak click must unlink");
+			assertUnlinked(test, a);
+			assertUnlinked(test, b);
+			player.setShiftKeyDown(false);
+			player.setItemInHand(hand, ItemStack.EMPTY);
+			test.assertTrue(playerClick(player, InteractionHand.MAIN_HAND, a.getBlockPos()).consumesAction(),
+				"Empty-hand portal inspection must still work");
+			test.succeed();
+		} finally {
+			test.getLevel().getServer().getPlayerList().remove(player);
+			player.discard();
+		}
+	}
+
+	private static InteractionResult playerClick(ServerPlayer player, InteractionHand hand, BlockPos pos) {
+		return player.gameMode.useItemOn(player, player.level(), player.getItemInHand(hand), hand,
+			new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
+	}
+
 	@GameTest
 	public void crossDimensionPairAndUnlink(GameTestHelper test) {
 		crossDimensionTuner(test, 0);

@@ -1,0 +1,18 @@
+{
+  "block.pointportals.teleporter": "Téléporteur point à point",
+  "item.pointportals.tuner": "Syntoniseur de phase",
+  "message.pointportals.already_linked": "Ce portail est déjà lié à une autre destination.",
+  "message.pointportals.cannot_self_link": "Impossible de relier un portail à lui-même !",
+  "message.pointportals.destination_obstructed": "Le portail de destination est obstrué !",
+  "message.pointportals.first_portal_selected": "Premier portail sélectionné aux coordonnées [%s, %s, %s]. Sélectionnez le portail de destination.",
+  "message.pointportals.invalid_dimension": "La dimension de destination est actuellement inaccessible.",
+  "message.pointportals.portals_linked": "Portails associés ! Alimentez-les en redstone pour les activer.",
+  "message.pointportals.portals_unlinked": "Liaison entre les portails supprimée.",
+  "message.pointportals.source_portal_missing": "Le premier portail est introuvable ou a été détruit !",
+  "message.pointportals.status_active": "Téléporteur lié à %s aux coordonnées [%s, %s, %s] (Actif).",
+  "message.pointportals.status_standby": "Téléporteur lié à %s aux coordonnées [%s, %s, %s] (En veille : nécessite de la redstone).",
+  "message.pointportals.status_unlinked": "Le téléporteur n’est pas lié. Utilisez un syntoniseur de phase pour l’associer.",
+  "message.pointportals.tuner_cleared": "Mémoire du syntoniseur de phase effacée.",
+  "tooltip.pointportals.tuner_target": "Sélection : %s aux coordonnées [%s, %s, %s]",
+  "tooltip.pointportals.tuner_unbound": "Faites un clic droit sur un téléporteur non lié pour commencer l’association."
+}

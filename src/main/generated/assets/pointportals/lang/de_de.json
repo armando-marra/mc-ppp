@@ -1,0 +1,18 @@
+{
+  "block.pointportals.teleporter": "Punkt-zu-Punkt-Teleporter",
+  "item.pointportals.tuner": "Phasenabstimmer",
+  "message.pointportals.already_linked": "Dieses Portal ist bereits mit einem anderen Ziel verknüpft.",
+  "message.pointportals.cannot_self_link": "Ein Portal kann nicht mit sich selbst verknüpft werden!",
+  "message.pointportals.destination_obstructed": "Das Zielportal ist blockiert!",
+  "message.pointportals.first_portal_selected": "Erstes Portal bei [%s, %s, %s] ausgewählt. Wähle das Zielportal aus.",
+  "message.pointportals.invalid_dimension": "Die Zieldimension ist derzeit nicht zugänglich.",
+  "message.pointportals.portals_linked": "Portale gekoppelt! Versorge sie mit Redstone, um sie zu aktivieren.",
+  "message.pointportals.portals_unlinked": "Verknüpfung der Portale aufgehoben.",
+  "message.pointportals.source_portal_missing": "Das erste Portal wurde nicht gefunden oder zerstört!",
+  "message.pointportals.status_active": "Teleporter mit %s bei [%s, %s, %s] verknüpft (Aktiv).",
+  "message.pointportals.status_standby": "Teleporter mit %s bei [%s, %s, %s] verknüpft (Bereit: benötigt Redstone).",
+  "message.pointportals.status_unlinked": "Der Teleporter ist nicht verknüpft. Verwende einen Phasenabstimmer zum Koppeln.",
+  "message.pointportals.tuner_cleared": "Speicher des Phasenabstimmers gelöscht.",
+  "tooltip.pointportals.tuner_target": "Auswahl: %s bei [%s, %s, %s]",
+  "tooltip.pointportals.tuner_unbound": "Klicke mit der rechten Maustaste auf einen unverknüpften Teleporter, um die Kopplung zu beginnen."
+}
