@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.2] - 2026-11-14
+
+### Added
+- Client-side oval above linked, powered Teleporters using the live animated vanilla Nether portal sprite and its native opacity, framed by a violet/cyan border and vanilla portal particles. The vertical plane faces the viewer, renders within 32 blocks and disappears when power or the link is lost.
+- Opt-in graphical regression (`runPortalClientTest`) in an isolated client world, with screenshots and checks for animation and activation/deactivation.
+
+### Changed
+- Linked, unpowered pads retain the pre-oval active appearance, level-12 light, portal particles and ambient sound. The oval and transport still require Redstone.
+- Updated gameplay documentation and included real-client active/standby screenshots. Recipes, exclusive pairing, cross-dimension transport and cooldowns remain unchanged.
+
+### Validation
+- The server regression suite contains 38 tests. The separate real-client test checks the Nether-textured surface, cyan border, animation, level-12 light in linked states and oval disappearance without power or a link. Additional camera-angle, occlusion and many-portal performance checks remain manual.
+
+---
+
 ## [0.1.0] - 2026-11-14
 
 ### Added

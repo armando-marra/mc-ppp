@@ -62,6 +62,31 @@ fabricApi {
 	}
 }
 
+// Opt-in graphical regression: separate from the server suite and distributed JAR.
+sourceSets {
+	clientTest {
+		compileClasspath += sourceSets.main.output + sourceSets.client.output + sourceSets.client.compileClasspath
+		runtimeClasspath += sourceSets.main.output + sourceSets.client.output + sourceSets.client.runtimeClasspath
+	}
+}
+loom {
+	mods {
+		"pointportals-client-test" {
+			sourceSet sourceSets.clientTest
+		}
+	}
+	runs {
+		portalClientTest {
+			inherit client
+			name "Portal visual regression"
+			source sourceSets.clientTest
+			runDir "build/portal-client-test"
+			vmArg "-Dfabric.client.gametest"
+			vmArg "-Dfabric.client.gametest.modid=pointportals-client-test"
+		}
+	}
+}
+
 def benchmarkEnabled = providers.gradleProperty('portalBenchmark').isPresent()
 if (benchmarkEnabled) {
 	loom.runs.gameTest {
