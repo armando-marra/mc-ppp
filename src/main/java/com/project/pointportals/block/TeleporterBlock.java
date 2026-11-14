@@ -225,47 +225,42 @@ public class TeleporterBlock extends Block implements EntityBlock {
 		double y = pos.getY() + 1.0;
 		double z = pos.getZ() + 0.5;
 
+		// Every linked pad keeps the original active particles and ambience; Redstone gates travel and the oval.
+		for (int i = 0; i < 2; i++) {
+			double offsetX = (random.nextDouble() - 0.5) * 0.8;
+			double offsetZ = (random.nextDouble() - 0.5) * 0.8;
+			level.addParticle(
+				ParticleTypes.PORTAL,
+				x + offsetX,
+				y,
+				z + offsetZ,
+				(random.nextDouble() - 0.5) * 0.2,
+				(random.nextDouble() * 0.5) + 0.1,
+				(random.nextDouble() - 0.5) * 0.2
+			);
+			level.addParticle(
+				ParticleTypes.REVERSE_PORTAL,
+				x + offsetX,
+				y,
+				z + offsetZ,
+				0.0,
+				0.05,
+				0.0
+			);
+		}
+		if (random.nextInt(120) == 0) {
+			level.playLocalSound(x, y, z, SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.25F, 1.2F, false);
+		}
 		if (state.getValue(POWERED)) {
-			// Active: vibrant portal and reverse portal particles rising
-			for (int i = 0; i < 2; i++) {
-				double offsetX = (random.nextDouble() - 0.5) * 0.8;
-				double offsetZ = (random.nextDouble() - 0.5) * 0.8;
-				level.addParticle(
-					ParticleTypes.PORTAL,
-					x + offsetX,
-					y,
-					z + offsetZ,
-					(random.nextDouble() - 0.5) * 0.2,
-					(random.nextDouble() * 0.5) + 0.1,
-					(random.nextDouble() - 0.5) * 0.2
-				);
-				level.addParticle(
-					ParticleTypes.REVERSE_PORTAL,
-					x + offsetX,
-					y,
-					z + offsetZ,
-					0.0,
-					0.05,
-					0.0
-				);
-			}
-			if (random.nextInt(120) == 0) {
-				level.playLocalSound(x, y, z, SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.25F, 1.2F, false);
-			}
-		} else {
-			// Standby: faint enchanting particles indicating armed connection
-			if (random.nextInt(4) == 0) {
-				double offsetX = (random.nextDouble() - 0.5) * 0.6;
-				double offsetZ = (random.nextDouble() - 0.5) * 0.6;
-				level.addParticle(
-					ParticleTypes.ENCHANT,
-					x + offsetX,
-					y,
-					z + offsetZ,
-					0.0,
-					0.1,
-					0.0
-				);
+			// Real vanilla particles around the upright oval's volume, independent of FPS.
+			// A narrow 3D halo stays suitable as the oval turns to face different viewers.
+			for (int i = 0; i < 4; i++) {
+				double angle = random.nextDouble() * Math.PI * 2;
+				double azimuth = random.nextDouble() * Math.PI * 2;
+				double radius = 0.72 * Math.cos(angle);
+				level.addParticle(ParticleTypes.REVERSE_PORTAL,
+					x + radius * Math.cos(azimuth), pos.getY() + 2.12 + 1.16 * Math.sin(angle),
+					z + radius * Math.sin(azimuth), 0, 0.01, 0);
 			}
 		}
 	}

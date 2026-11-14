@@ -2,7 +2,53 @@
 
 Aggiornato al 14 novembre 2026.
 
-## Punto di ripresa corrente — release 0.1.0
+## Punto di ripresa corrente — release 0.1.2
+
+Versione aggiornata a **0.1.2**, con changelog e documentazione allineati alla
+superficie animata vanilla Nether ovale, bordo viola/ciano e particelle, e allo
+standby con aspetto e luce del precedente attivo. La 0.1.2 include il renderer
+client e la regressione grafica separata; le meccaniche di trasporto restano
+invariate. L'utente ha autorizzato commit e push di `codex/oval-portal-effect`,
+merge su `main`, push di `main` e creazione/push del tag `v0.1.2` per la release.
+
+Verifiche 0.1.2 completate: `runDatagen`, `runPortalClientTest` e build completa
+riusciti, **38/38 GameTest server** e sei test dello script di release superati.
+Packaging locale validato per runtime/sorgenti e checksum SHA-256; nel JAR
+controllati metadata 0.1.2, renderer, cinque lingue, texture, modello standby
+uguale all'attivo ed esclusione del test grafico. Screenshot aggiornati dalla
+prova client eseguita con la versione 0.1.2.
+
+## Implementazione dell'ovale — inclusa in 0.1.2
+
+Implementazione locale nel nuovo branch `codex/oval-portal-effect`, basato sulla
+release 0.1.0. Renderer registrato dal solo entrypoint client: ovale verticale
+1,3×2,2 blocchi, sprite animato vanilla del portale Nether ritagliato a ovale,
+con colori e alpha originali e bordi viola/ciano. Particelle vanilla emesse da
+animateTick circondano il volume del portale attivo senza dipendere dagli FPS.
+La spirale procedurale e le particelle disegnate dal renderer sono state sostituite.
+Si orienta verso la camera lungo Y, si disegna entro
+32 blocchi e compare solo con LINKED e POWERED veri. Geometria full-bright
+con profondità verificata e senza scrittura della profondità; nessuna vista
+della destinazione, collisione o luce dinamica.
+
+Su richiesta dell'utente lo standby conserva ora il precedente aspetto attivo:
+stesse texture del blocco attivo, luce 12, particelle portal/reverse_portal e
+suono ambientale. Redstone continua a controllare ovale e trasporto; LINKED
+controlla aspetto e luce della pedana. Aggiornata anche la definizione in AGENTS.md.
+
+`compileClientJava` e build completa riusciti, **38/38 GameTest server**.
+Test grafico separato `runPortalClientTest` riuscito su client reale: selezione
+stato, presenza/scomparsa della superficie Nether e del bordo ciano, luce 12
+nei due stati collegati e differenze tra fotogrammi animati.
+Screenshot reali attivo/standby in `docs/artwork/oval-portal-concept/` e README;
+il concept AI resta distinto. Classi e risorse client test in source set separato,
+escluso dal JAR distribuito e dalla build/test server ordinaria.
+
+Restano controlli manuali su altri angoli, occlusioni, base fuori schermo e molti
+portali contemporanei. Questa funzionalità parte dalla 0.1.2 e non appartiene
+al tag precedentemente pubblicato `v0.1.0`.
+
+## Stato precedente — release 0.1.0
 
 Versione portata a **0.1.0**. Include la correzione del clic destro del Phase
 Tuner, tre nuovi test di interazione (38 totali), quattro lingue aggiuntive,

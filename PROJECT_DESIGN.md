@@ -1,6 +1,6 @@
 # Point-to-Point Portals — progetto e stato
 
-**Versione:** 0.1.0.
+**Versione:** 0.1.2.
 
 **Target:** Minecraft Java Edition 26.2+, Fabric Loader >= 0.19.5, Fabric API >= 0.159.0 per Minecraft 26.2.
 **Toolchain:** Java 25, Gradle 9.x, Fabric Loom 1.19+, mappings ufficiali Mojang.
@@ -16,10 +16,24 @@ Sneak + click cancella prima una selezione presente nel tuner; con tuner vuoto
 scollega una coppia. Il gemello scaricato viene riconciliato successivamente.
 
 Il blocco ha le proprietà LINKED e POWERED, con quattro combinazioni e tre
-aspetti: inattivo senza luce, standby con luce 3 e attivo con luce 12.
+aspetti: inattivo senza luce, standby e attivo con luce 12. Lo standby conserva
+texture, particelle e suono del precedente stato attivo, ma non mostra l'ovale.
 POWERED segue sempre la Redstone, anche senza collegamento. Il trasporto
 richiede LINKED e POWERED alla partenza e un gemello valido e reciproco.
 La rimozione del segnale interrompe l'attività del portale.
+
+Dalla versione 0.1.2 un renderer esclusivamente client mostra
+un ovale verticale largo circa 1,3 blocchi e alto 2,2 sopra la pedana attiva:
+la texture animata vanilla `minecraft:block/nether_portal`, campionata dall'atlante
+blocchi con colori e alpha originali, senza spirale procedurale. Un doppio bordo
+viola/ciano delimita la sagoma; particelle vanilla REVERSE_PORTAL circondano
+il volume dell'ovale, emesse da animateTick solo nello stato attivo e senza
+dipendenza dal frame rate. L'ovale si orienta verso la camera lungo l'asse verticale, resta
+visibile entro 32 blocchi e rispetta l'occlusione dei blocchi opachi. Non mostra
+la destinazione, non aggiunge collisioni o luce dinamica/bloom e non modifica
+il trasporto. Estrazione dello stato dal BlockState sincronizzato e disegno
+separati, senza accesso al mondo nella fase di submission. Lo spegnimento o
+lo scollegamento disabilitano subito il renderer quando il client riceve lo stato.
 
 La rimozione di un portale scollega subito il gemello caricato e reciproco.
 I controlli periodici, distribuiti su 40 tick, non caricano chunk remoti:
@@ -41,7 +55,7 @@ di rame sopra/sotto e due polveri di Redstone ai lati dell'occhio di Ender.
 Il tuner usa una colonna di ametista, perla di Ender e verga di Blaze.
 Il Teleporter usa nove texture originali 32×32 (alto, lato e fondo per ciascuno
 dei tre stati): cornice di rame, corpo di ossidiana, rune scure da scollegato,
-indicatori ciano tenui in standby e nucleo ciano/viola da attivo.
+il nucleo ciano/viola del precedente attivo sia in standby sia da attivo.
 L'item in inventario usa il modello inattivo; le quattro varianti LINKED/POWERED
 mantengono la mappatura ai tre stati visivi.
 Il Phase Tuner ha una texture originale trasparente 32×32: impugnatura di

@@ -24,3 +24,8 @@ The runtime copies are in `src/main/resources/assets/pointportals/textures/block
 The Fabric model provider selects the top, side and bottom for each block state.
 The inventory item uses the inactive model. The four `linked`/`powered` variants
 keep their existing mapping to the three visual states.
+
+Revision in 0.1.2: standby now uses the same runtime face textures as active,
+matching the requested pre-oval active appearance. The original atlas, extracted
+standby faces and `preview.png` above remain a record of the initial proposal;
+current active/standby screenshots are in `../oval-portal-concept/`.

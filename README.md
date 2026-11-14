@@ -16,8 +16,18 @@ Unlike traditional teleportation mods that rely on text menus or sprawling globa
 ### 1. Dual-State Portal Block (`TeleporterBlock`)
 Each portal block operates through three clear visual and mechanical states:
 - **Inactive (Unlinked):** Freshly placed or unbound. The portal emits no light and does not teleport entities; POWERED still tracks Redstone.
-- **Standby (Linked, Unpowered):** Bound to an active twin, but lacking Redstone activation. Displays faint, glowing rune indicators, but teleportation remains armed and closed.
+- **Standby (Linked, Unpowered):** Retains the previous active pad's texture, level-12 light, portal particles and ambient sound. Teleportation and the oval remain disabled without Redstone.
 - **Active (Linked & Powered):** Bound to an active twin **AND** supplied with a Redstone signal (`POWERED = true`). Fully opens with bright illumination, rune particles, and instant entity transport.
+
+Active Teleporters also display a vertical oval using
+the actual animated Nether portal texture, with its native colors and opacity.
+It retains a violet/cyan outline and vanilla portal particles around the oval.
+The effect faces the
+viewer and renders within 32 blocks. It vanishes without power or a link; stepping
+onto the pad still triggers travel. This is a visual effect, not a view of the
+destination, and does not require a physical portal frame or add collision.
+
+![Actual client screenshot of the animated oval above an active Teleporter.](docs/artwork/oval-portal-concept/implemented-active.png)
 
 > **Link recovery:** Removal immediately unlinks a loaded reciprocal twin. If the twin is unloaded, reconciliation is deferred until both endpoints can be inspected. Periodic checks every 40 ticks do not load remote chunks; interactions and transport attempts can resolve them synchronously.
 
@@ -64,7 +74,7 @@ Crafts a complete matching pair in one recipe:
 ![Phase Tuner crafting recipe: an amethyst shard above an Ender Pearl above a Blaze Rod in the middle column; produces one Phase Tuner.](docs/images/crafting-tuner.png)
 
 Recipe images use Minecraft textures and the mod's current item models. The Phase Tuner has an original texture with an obsidian grip, copper mount and violet crystal.
-The Teleporter uses original copper-and-obsidian textures with distinct inactive, standby and active states.
+The Teleporter uses original copper-and-obsidian textures. Standby and active pads share the lit rune appearance; only active pads display the oval and allow travel.
 
 ---
 
@@ -93,7 +103,8 @@ Keep machine-specific JDK paths in your user Gradle configuration, outside this 
 The development baseline is Minecraft 26.2, Fabric Loader 0.19.5 and Fabric API
 `0.159.0+26.2`. The current suite contains 38 server GameTests. Dedicated-server
 startup and clean shutdown were verified with the 0.0.11 packaged mod on this
-combination; this does not establish visual or gameplay correctness for 0.1.0. Earlier Loader
+combination. The 0.1.2 real-client regression checks the oval's appearance,
+animation and activation states; broader gameplay and modpack checks remain separate. Earlier Loader
 0.19.x versions and Minecraft versions before 26.2 are not supported by this
 change. A real-client gameplay check remains separate from these automated
 tests. The relaxed requirements apply starting with **0.0.11**; previously published
@@ -110,6 +121,9 @@ tests. The relaxed requirements apply starting with **0.0.11**; previously publi
 
 # Run the server regression suite with optional JFR diagnostics
 ./gradlew runGameTest -PportalProfile
+
+# Run the optional visual regression in a real client (requires a graphical session)
+./gradlew runPortalClientTest
 
 # Isolated automated loading benchmark (PowerShell; writes a fresh world/report)
 ./scripts/Run-LoadingBenchmark.ps1
@@ -128,7 +142,7 @@ tests. The relaxed requirements apply starting with **0.0.11**; previously publi
 
 ## Releases
 
-The current project version is **0.1.0**. Preparing this version does not
+The current project version is **0.1.2**. Preparing this version does not
 publish a release; publication starts only after pushing its version tag.
 
 Release automation runs only when a `v*` tag is pushed. Pushes and pull requests
@@ -139,7 +153,7 @@ release commit before tagging it. Benchmarks remain a separate, manual task.
 1. Set `mod_version` and add matching release notes in `CHANGELOG.md`, then commit.
 2. For a stable release, integrate that commit into `main` and verify it locally.
    For a release candidate, use a commit on `devel`.
-3. Create and push the matching tag, for example `v0.1.0` or `v0.1.0-rc.1`.
+3. Create and push the matching tag, for example `v0.1.2` or `v0.1.2-rc.1`.
    These are examples: the current version remains defined in `gradle.properties`.
 
 The [release workflow](.github/workflows/release.yml) checks the exact tagged
@@ -147,10 +161,10 @@ commit, branch ancestry, version and changelog before installing Java 25.
 It runs `bash ./gradlew --no-daemon jar sourcesJar`, verifies the resulting
 packages and publishes a GitHub Release with the mod JAR, sources JAR and
 `SHA256SUMS.txt`. Published files include the mod version, Minecraft version and
-loader: `pointportals-0.1.0-mc26.2-fabric.jar` and
-`pointportals-0.1.0-mc26.2-fabric-sources.jar`. These names are staged in
+loader: `pointportals-0.1.2-mc26.2-fabric.jar` and
+`pointportals-0.1.2-mc26.2-fabric-sources.jar`. These names are staged in
 `build/release`; original Gradle outputs in `build/libs` are unchanged.
-The tag remains plain SemVer with a `v` prefix, such as `v0.1.0`.
+The tag remains plain SemVer with a `v` prefix, such as `v0.1.2`.
 Only the runtime JAR requires expanded version metadata;
 the sources JAR includes the original resource template. RCs are prereleases;
 older stable versions do not replace a newer stable release as Latest.

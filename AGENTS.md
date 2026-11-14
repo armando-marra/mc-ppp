@@ -10,8 +10,8 @@
    - If Portal A is linked to Portal B, Portal B's stored destination must be Portal A, and vice versa.
 2. **Dual BlockState Mechanics (`LINKED` & `POWERED`):**
    - **Inactive (Unlinked):** `LINKED = false`, `POWERED = false/true`. The portal has no destination. Cannot transport entities. No light emitted.
-   - **Standby (Linked, Unpowered):** `LINKED = true`, `POWERED = false`. Portal is bound to an active twin, but lacks Redstone activation. Emits faint light/indicator, but teleportation is disabled.
-   - **Active (Linked & Powered):** `LINKED = true`, `POWERED = true`. Fully active with light emission, particles, and entity teleportation.
+   - **Standby (Linked, Unpowered):** `LINKED = true`, `POWERED = false`. Retains the pre-oval active block appearance, level-12 light, portal particles and ambient sound. The oval and teleportation are disabled.
+   - **Active (Linked & Powered):** `LINKED = true`, `POWERED = true`. Adds a vertical oval using the live vanilla Nether portal texture and enables entity teleportation.
 3. **Redstone Dependency:**
    - Portals require continuous Redstone power to maintain active status. Loss of Redstone power instantly transitions the portal back to Standby (`POWERED = false`).
 4. **Chunk-Loading & Cross-Dimension Safety:**

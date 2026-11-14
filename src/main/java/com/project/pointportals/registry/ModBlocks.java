@@ -21,7 +21,7 @@ public final class ModBlocks {
 			.requiresCorrectToolForDrops()
 			.lightLevel(state -> {
 				if (state.getValue(TeleporterBlock.LINKED)) {
-					return state.getValue(TeleporterBlock.POWERED) ? 12 : 3;
+					return 12;
 				}
 				return 0;
 			})

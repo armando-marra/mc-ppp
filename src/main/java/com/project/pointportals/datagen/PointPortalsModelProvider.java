@@ -59,9 +59,9 @@ public class PointPortalsModelProvider implements DataProvider {
 		), blockModels.json(PointPortals.id("teleporter_inactive"))));
 
 		futures.add(DataProvider.saveStable(output, createCubeBottomTopModel(
-			"pointportals:block/teleporter_standby_top",
-			"pointportals:block/teleporter_standby_bottom",
-			"pointportals:block/teleporter_standby_side"
+			"pointportals:block/teleporter_active_top",
+			"pointportals:block/teleporter_active_bottom",
+			"pointportals:block/teleporter_active_side"
 		), blockModels.json(PointPortals.id("teleporter_standby"))));
 
 		futures.add(DataProvider.saveStable(output, createCubeBottomTopModel(

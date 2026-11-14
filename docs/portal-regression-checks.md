@@ -3,7 +3,7 @@
 ## Automated server tests
 
 The default compatibility baseline in `gradle.properties` is Minecraft 26.2,
-Fabric Loader 0.19.5 and Fabric API `0.159.0+26.2`. The 0.1.0 suite contains
+Fabric Loader 0.19.5 and Fabric API `0.159.0+26.2`. The 0.1.2 suite contains
 38 regression tests. The 0.0.11 packaged runtime JAR was also loaded by
 an isolated Fabric production server using those versions: mod registration,
 world startup (`Done`) and clean shutdown succeeded. This startup check does
@@ -74,10 +74,34 @@ including Fabric's own test); benchmark classes are never distributed in the JAR
 
 ## Manual checks
 
-The 0.1.0 asset checks verify all nine approved Teleporter faces, the Phase Tuner
+### Oval effect client regression (0.1.2)
+
+Run `./gradlew runPortalClientTest` in a graphical session. A separate client-only
+test mod creates an isolated singleplayer world under `build/portal-client-test`,
+links a pair, powers one pad and captures active/animated, standby and powered-but-
+unlinked frames. It checks activation from the real client BlockEntity, visible
+Nether-textured oval disappearance, native sprite animation between frames and
+level-12 light on both linked states. Screenshots are in
+`build/portal-client-test/screenshots/`. These checks are opt-in and do not run as
+part of `build`; client test classes/resources are not packaged in the mod JAR.
+The normal server suite continues to verify teleportation behavior separately.
+
+Manually check additional camera angles, looking at the oval while the base block
+is off-screen, opaque-wall occlusion, range limits and performance with many
+active portals. The effect has no dynamic-lighting or bloom dependency. The image
+in `docs/artwork/oval-portal-concept/preview.png` is an AI concept, not a screenshot;
+the regression screenshots show the implemented result.
+
+Standby uses the same block face textures as active, and retains the former
+active portal/reverse-portal particles and ambient sound. Only the oval and travel
+are gated by Redstone. Original standby texture files are retained as artwork,
+but the generated standby model now points to the active face textures.
+
+The 0.1.2 asset checks verify all nine approved Teleporter faces, the Phase Tuner
 sprite, model references, four blockstate variants, and five complete language
-files in the runtime JAR. Real-client texture rendering and language switching
-remain manual checks. Tick-2 arrival assertions have intermittently failed for
+files in the runtime JAR. The graphical regression checks actual rendering and
+activation of the oval. Language switching and broader gameplay remain manual
+checks. Tick-2 arrival assertions have intermittently failed for
 End transfers and mock-player Overworld-to-Nether transfers; passing reruns do
 not resolve that fixture timing concern.
 
