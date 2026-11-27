@@ -26,6 +26,9 @@ public class PointPortalsEnglishLangProvider extends FabricLanguageProvider {
 		builder.add("message.pointportals.portals_linked", "Portals successfully paired! Power with Redstone to activate.");
 		builder.add("message.pointportals.portals_unlinked", "Portals successfully unlinked.");
 		builder.add("message.pointportals.tuner_cleared", "Phase Tuner memory cleared.");
+		builder.add("message.pointportals.label_set", "Portal label: %s");
+		builder.add("message.pointportals.label_cleared", "Portal label cleared.");
+		builder.add("message.pointportals.label_invalid", "Use a single line of up to %s characters.");
 		builder.add("message.pointportals.status_unlinked", "Teleporter is unlinked. Use a Phase Tuner to pair.");
 		builder.add("message.pointportals.status_standby", "Teleporter paired with %s at [%s, %s, %s] (Standby - requires Redstone).");
 		builder.add("message.pointportals.status_active", "Teleporter paired with %s at [%s, %s, %s] (Active).");

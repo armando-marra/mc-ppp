@@ -35,6 +35,7 @@ public final class PortalVisualTest implements FabricClientGameTest {
 				level.setBlock(A.below(), Blocks.REDSTONE_BLOCK.defaultBlockState(), Block.UPDATE_ALL);
 				level.setBlock(A, ModBlocks.TELEPORTER.defaultBlockState(), Block.UPDATE_ALL);
 				level.setBlock(B, ModBlocks.TELEPORTER.defaultBlockState(), Block.UPDATE_ALL);
+				((TeleporterBlockEntity) level.getBlockEntity(A)).setLabel("Miniere del Nord");
 				((TeleporterBlockEntity) level.getBlockEntity(A)).setTwinTarget(PortalTarget.of(level, B));
 				((TeleporterBlockEntity) level.getBlockEntity(B)).setTwinTarget(PortalTarget.of(level, A));
 				level.setBlock(A, level.getBlockState(A).setValue(TeleporterBlock.LINKED, true), Block.UPDATE_ALL);
@@ -55,6 +56,13 @@ public final class PortalVisualTest implements FabricClientGameTest {
 			context.waitTicks(5);
 			assertState(context, true);
 			Path active = context.takeScreenshot("oval-active");
+			server.runOnServer(instance -> ((TeleporterBlockEntity) instance.overworld().getBlockEntity(A)).setLabel(""));
+			context.waitFor(client -> ((TeleporterBlockEntity) client.level.getBlockEntity(A)).getLabel().isEmpty());
+			context.waitTicks(2);
+			Path bare = context.takeScreenshot("oval-without-label");
+			verifyLabelAboveRim(active, bare);
+			server.runOnServer(instance -> ((TeleporterBlockEntity) instance.overworld().getBlockEntity(A)).setLabel("Miniere del Nord"));
+			context.waitFor(client -> ((TeleporterBlockEntity) client.level.getBlockEntity(A)).getLabel().equals("Miniere del Nord"));
 			context.waitTicks(15);
 			Path animated = context.takeScreenshot("oval-active-animated");
 			server.runOnServer(instance -> instance.overworld().setBlock(A.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL));
@@ -74,6 +82,32 @@ public final class PortalVisualTest implements FabricClientGameTest {
 			Path unlinked = context.takeScreenshot("oval-unlinked-powered");
 			verifyFrames(active, animated, standby, unlinked);
 		}
+	}
+
+	private static void verifyLabelAboveRim(Path labeled, Path bare) {
+		try {
+			var before = ImageIO.read(bare.toFile());
+			var after = ImageIO.read(labeled.toFile());
+			int top = before.getHeight();
+			for (int x = before.getWidth() / 3; x < before.getWidth() * 2 / 3; x++) {
+				for (int y = 0; y < top; y++) {
+					if (isCyan(before.getRGB(x, y))) top = y;
+				}
+			}
+			int letters = 0;
+			for (int y = 0; y < top; y++) {
+				for (int x = after.getWidth() / 3; x < after.getWidth() * 2 / 3; x++) {
+					if (isCyan(after.getRGB(x, y))) letters++;
+				}
+			}
+			if (letters < 50) throw new AssertionError("Label must add visible cyan lettering above the upper rim");
+		} catch (IOException e) {
+			throw new AssertionError("Unable to inspect label screenshots", e);
+		}
+	}
+
+	private static boolean isCyan(int color) {
+		return (color >> 16 & 255) < 140 && (color >> 8 & 255) > 170 && (color & 255) > 200;
 	}
 
 	private static void verifyFrames(Path active, Path animated, Path standby, Path unlinked) {
@@ -118,7 +152,7 @@ public final class PortalVisualTest implements FabricClientGameTest {
 		for (int y = image.getHeight() / 8; y < image.getHeight() * 5 / 8; y++) {
 			for (int x = image.getWidth() / 3; x < image.getWidth() * 2 / 3; x++) {
 				int color = image.getRGB(x, y);
-				if ((color >> 16 & 255) < 140 && (color >> 8 & 255) > 170 && (color & 255) > 200) count++;
+				if (isCyan(color)) count++;
 			}
 		}
 		return count;
@@ -135,6 +169,9 @@ public final class PortalVisualTest implements FabricClientGameTest {
 			if (!(renderer instanceof TeleporterRenderer)) throw new AssertionError("Teleporter renderer must be registered");
 			var state = renderer.createRenderState();
 			renderer.extractRenderState(blockEntity, state, 0, client.player.position(), null);
+			if (!blockEntity.getLabel().equals("Miniere del Nord") || !state.label.equals(active ? "Miniere del Nord" : "")) {
+				throw new AssertionError("The label must stay synchronized and only render on the active oval");
+			}
 			if (state.active != active) throw new AssertionError("Unexpected portal render activation");
 		});
 	}

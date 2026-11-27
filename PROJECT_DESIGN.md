@@ -1,6 +1,6 @@
 # Point-to-Point Portals — progetto e stato
 
-**Versione:** 0.1.2.
+**Versione:** 0.2.0.
 
 **Target:** Minecraft Java Edition 26.2+, Fabric Loader >= 0.19.5, Fabric API >= 0.159.0 per Minecraft 26.2.
 **Toolchain:** Java 25, Gradle 9.x, Fabric Loom 1.19+, mappings ufficiali Mojang.
@@ -34,6 +34,14 @@ la destinazione, non aggiunge collisioni o luce dinamica/bloom e non modifica
 il trasporto. Estrazione dello stato dal BlockState sincronizzato e disegno
 separati, senza accesso al mondo nella fase di submission. Lo spegnimento o
 lo scollegamento disabilitano subito il renderer quando il client riceve lo stato.
+
+Ogni pedana conserva la propria etichetta nella block entity. Il giocatore può
+assegnarla subito dopo la posa con una targhetta rinominata all’incudine.
+Il testo occupa una sola riga di massimo 24 caratteri. Una targhetta senza nome
+lo cancella. Entrambe le operazioni lasciano la targhetta al giocatore.
+Le lettere ciano con contorno viola seguono il bordo superiore dell’ovale solo
+quando la pedana è collegata e alimentata. Il testo sopravvive allo spegnimento,
+allo scollegamento e al ricaricamento del mondo.
 
 La rimozione di un portale scollega subito il gemello caricato e reciproco.
 I controlli periodici, distribuiti su 40 tick, non caricano chunk remoti:

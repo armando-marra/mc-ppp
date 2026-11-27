@@ -1,8 +1,15 @@
 # Stato dei miglioramenti
 
-Aggiornato al 14 novembre 2026.
+Aggiornato al 27 novembre 2026.
 
-## Punto di ripresa corrente — release 0.1.2
+## Punto di ripresa corrente — versione 0.2.0
+
+Ogni pedana può ricevere un’etichetta dalla posa. Il server conserva il testo
+per ciascuna estremità e lo sincronizza con il client. La scritta segue il
+bordo superiore dell’ovale attivo. La suite comprende 39 GameTest server
+e un test grafico che confronta lo stesso ovale con e senza etichetta.
+
+## Storico — release 0.1.2
 
 Versione aggiornata a **0.1.2**, con changelog e documentazione allineati alla
 superficie animata vanilla Nether ovale, bordo viola/ciano e particelle, e allo

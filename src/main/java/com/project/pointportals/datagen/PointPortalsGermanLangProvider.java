@@ -26,6 +26,9 @@ public class PointPortalsGermanLangProvider extends FabricLanguageProvider {
 		builder.add("message.pointportals.portals_linked", "Portale gekoppelt! Versorge sie mit Redstone, um sie zu aktivieren.");
 		builder.add("message.pointportals.portals_unlinked", "Verknüpfung der Portale aufgehoben.");
 		builder.add("message.pointportals.tuner_cleared", "Speicher des Phasenabstimmers gelöscht.");
+		builder.add("message.pointportals.label_set", "Portalbeschriftung: %s");
+		builder.add("message.pointportals.label_cleared", "Portalbeschriftung entfernt.");
+		builder.add("message.pointportals.label_invalid", "Verwende eine Zeile mit höchstens %s Zeichen.");
 		builder.add("message.pointportals.status_unlinked", "Der Teleporter ist nicht verknüpft. Verwende einen Phasenabstimmer zum Koppeln.");
 		builder.add("message.pointportals.status_standby", "Teleporter mit %s bei [%s, %s, %s] verknüpft (Bereit: benötigt Redstone).");
 		builder.add("message.pointportals.status_active", "Teleporter mit %s bei [%s, %s, %s] verknüpft (Aktiv).");
