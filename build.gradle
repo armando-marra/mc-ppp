@@ -122,9 +122,13 @@ processResources {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 	def version = project.version
 	inputs.property "version", version
+	def changelog = providers.fileContents(layout.projectDirectory.file("CHANGELOG.md")).asText.get()
+	def release = changelog =~ /(?m)^## \[\Q${version}\E\] - (\d{4}-\d{2}-\d{2})\s*$/
+	def releaseDate = release.find() ? release.group(1) : ""
+	inputs.property "releaseDate", releaseDate
 
 	filesMatching("fabric.mod.json") {
-		expand "version": version
+		expand "version": version, "releaseDate": releaseDate
 	}
 }
 

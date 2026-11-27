@@ -9,6 +9,8 @@ import com.project.pointportals.registry.ModBlocks;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.minecraft.core.BlockPos;
+import net.minecraft.client.gui.screens.inventory.BookViewScreen;
+import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -50,6 +52,28 @@ public final class PortalVisualTest implements FabricClientGameTest {
 				&& client.level.getBlockState(A).getValue(TeleporterBlock.LINKED));
 			world.getConnection().waitForChunksRender();
 			world.getConnection().waitForClientboundPackets();
+			context.getInput().pressKey(GLFW.GLFW_KEY_K);
+			context.waitForScreen(BookViewScreen.class);
+			context.getInput().pressKey(GLFW.GLFW_KEY_PAGE_DOWN);
+			context.waitFor(client -> client.gui.screen() instanceof BookViewScreen guide
+				&& guide.getNarrationMessage().getString().contains("0.2.2")
+				&& guide.getNarrationMessage().getString().contains("east–west"));
+			context.runOnClient(client -> {
+				var guide = client.gui.screen();
+				var orientation = guide.children().stream().filter(CycleButton.class::isInstance).findFirst().orElseThrow();
+				guide.setFocused(orientation);
+			});
+			context.getInput().pressKey(GLFW.GLFW_KEY_ENTER);
+			context.waitFor(client -> !PortalAppearance.facesViewer());
+			try {
+				assertOrientation(context, true);
+			} finally {
+				context.getInput().pressKey(GLFW.GLFW_KEY_ENTER);
+				context.waitFor(client -> PortalAppearance.facesViewer());
+			}
+			assertOrientation(context, false);
+			context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+			context.waitFor(client -> client.gui.screen() == null);
 			context.getInput().resizeWindow(1280, 720);
 			context.getInput().lookAt(146.31F, 8);
 			context.getInput().pressKey(GLFW.GLFW_KEY_F1);
@@ -156,6 +180,23 @@ public final class PortalVisualTest implements FabricClientGameTest {
 			}
 		}
 		return count;
+	}
+
+	private static void assertOrientation(ClientGameTestContext context, boolean fixed) {
+		context.runOnClient(client -> {
+			var portal = (TeleporterBlockEntity) client.level.getBlockEntity(A);
+			var renderer = client.getBlockEntityRenderDispatcher().<TeleporterBlockEntity, TeleporterRenderState>getRenderer(portal);
+			var state = renderer.createRenderState();
+			var center = Vec3.atCenterOf(A);
+			renderer.extractRenderState(portal, state, 0, center.add(5, 0, 0), null);
+			float fromEast = state.yaw;
+			renderer.extractRenderState(portal, state, 0, center.add(0, 0, -5), null);
+			float fromNorth = state.yaw;
+			if (fixed ? fromEast != 0 || fromNorth != 0 || !state.labelOnBack
+				: Math.abs(fromEast - Math.PI / 2) > 0.001 || Math.abs(fromNorth - Math.PI) > 0.001) {
+				throw new AssertionError("Unexpected oval orientation at different camera positions");
+			}
+		});
 	}
 
 	private static void assertState(ClientGameTestContext context, boolean active) {

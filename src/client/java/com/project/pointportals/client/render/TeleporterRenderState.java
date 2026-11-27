@@ -7,6 +7,7 @@ public final class TeleporterRenderState extends BlockEntityRenderState {
 	public boolean active;
 	public String label = "";
 	public float yaw;
+	public boolean labelOnBack;
 	public float u0;
 	public float u1;
 	public float v0;

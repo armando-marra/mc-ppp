@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 public class PointPortalsClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		PortalGuide.initialize();
 		BlockEntityRenderers.register(ModBlockEntities.TELEPORTER, TeleporterRenderer::new);
 		ClientPlayNetworking.registerGlobalReceiver(PortalMapDetails.TYPE, (details, context) ->
 			context.client().gui.setScreen(new BookViewScreen(new BookViewScreen.BookAccess(details.pages()))));

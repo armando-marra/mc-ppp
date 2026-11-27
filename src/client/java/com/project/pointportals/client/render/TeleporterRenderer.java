@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.project.pointportals.block.TeleporterBlock;
 import com.project.pointportals.block.entity.TeleporterBlockEntity;
+import com.project.pointportals.client.PortalAppearance;
 import com.project.pointportals.registry.ModBlocks;
 import java.util.Arrays;
 import net.minecraft.client.gui.Font;
@@ -83,7 +84,9 @@ public final class TeleporterRenderer implements BlockEntityRenderer<TeleporterB
 		state.v0 = sprite.getV0();
 		state.v1 = sprite.getV1();
 		Vec3 offset = cameraPosition.subtract(Vec3.atCenterOf(blockEntity.getBlockPos()));
-		state.yaw = (float) Math.atan2(offset.x, offset.z);
+		boolean facesViewer = PortalAppearance.facesViewer();
+		state.yaw = facesViewer ? (float) Math.atan2(offset.x, offset.z) : 0;
+		state.labelOnBack = !facesViewer && offset.z < 0;
 	}
 
 	@Override
@@ -97,7 +100,11 @@ public final class TeleporterRenderer implements BlockEntityRenderer<TeleporterB
 		collector.submitCustomGeometry(poses, PORTAL.renderType(RenderTypes::entityTranslucentEmissive),
 			(pose, vertices) -> draw(pose, vertices, u0, u1, v0, v1));
 		collector.submitCustomGeometry(poses, RenderTypes.debugQuads(), TeleporterRenderer::drawRim);
-		if (!state.label.isEmpty()) submitLabel(state.label, poses, collector);
+		if (!state.label.isEmpty()) {
+			// Keep the label in the oval's plane and readable from either side.
+			if (state.labelOnBack) poses.mulPose(Axis.YP.rotationDegrees(180));
+			submitLabel(state.label, poses, collector);
+		}
 		poses.popPose();
 	}
 

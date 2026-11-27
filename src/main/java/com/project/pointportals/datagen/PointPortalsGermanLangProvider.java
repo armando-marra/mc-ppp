@@ -14,6 +14,26 @@ public class PointPortalsGermanLangProvider extends FabricLanguageProvider {
 
 	@Override
 	public void generateTranslations(HolderLookup.Provider registries, TranslationBuilder builder) {
+		builder.add("guide.pointportals.oval", "Ausrichtung");
+		builder.add("guide.pointportals.oval_follow", "Folgen");
+		builder.add("guide.pointportals.oval_fixed", "Fest");
+		builder.add("guide.pointportals.hint", "Drücke %s, um das Portalhandbuch zu öffnen.");
+		builder.add("guide.pointportals.hint_unbound", "Weise dem Portalhandbuch unter Optionen → Steuerung eine Taste zu.");
+		builder.add("key.category.pointportals.portals", "Point-to-Point Portals");
+		builder.add("key.pointportals.guide", "Portalhandbuch öffnen");
+		builder.add("guide.pointportals.version", "Version %s");
+		builder.add("guide.pointportals.release", "Erschienen am %s");
+		builder.add("guide.pointportals.unreleased", "In Entwicklung");
+		builder.add("guide.pointportals.changes", "Neu in %s");
+		builder.add("guide.pointportals.appearance", "Neu sind dieses Handbuch und der Hinweis beim ersten Betreten. Unter Ausrichtung folgt das Oval dir oder bleibt in Ost-West-Richtung. Die Wahl wird gespeichert.");
+		builder.add("guide.pointportals.cartography", "Portale auf Karten");
+		builder.add("guide.pointportals.maps", "Benutze eine gefüllte Karte an beiden Portalen, um sie zu markieren. Schau in die Luft und benutze die Karte beim Schleichen, um das Paar zu sehen. Kopien teilen Markierungen. Gesperrte Karten behalten den alten Stand.");
+		builder.add("guide.pointportals.pair", "Portale koppeln");
+		builder.add("guide.pointportals.pairing", "Platziere zwei freie Portale, auch in verschiedenen Dimensionen. Benutze den Phasenabstimmer erst am einen, dann am anderen Portal. Jedes Portal hat genau einen Partner.");
+		builder.add("guide.pointportals.travel", "Reisen");
+		builder.add("guide.pointportals.power", "Versorge das Startportal mit Redstone und betritt es. Lass zwei Blöcke über dem Ziel frei. Für die Rückreise braucht das Zielportal Strom. Verlasse es und warte vor dem Betreten einige Sekunden.");
+		builder.add("guide.pointportals.unlink", "Kopplung lösen");
+		builder.add("guide.pointportals.unlinking", "Benutze den leeren Phasenabstimmer beim Schleichen an einem der Portale. Ist ein Portal ausgewählt, löscht die erste Benutzung die Auswahl.");
 		builder.add(ModBlocks.TELEPORTER, "Punkt-zu-Punkt-Teleporter");
 		builder.add(ModItems.TUNER, "Phasenabstimmer");
 		builder.add("cartography.pointportals.pair", "%s ↔ %s");

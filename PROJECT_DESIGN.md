@@ -1,6 +1,6 @@
 # Point-to-Point Portals — progetto e stato
 
-**Versione:** 0.2.1.
+**Versione:** 0.2.2.
 
 **Target:** Minecraft Java Edition 26.2+, Fabric Loader >= 0.19.5, Fabric API >= 0.159.0 per Minecraft 26.2.
 **Toolchain:** Java 25, Gradle 9.x, Fabric Loom 1.19+, mappings ufficiali Mojang.
@@ -28,7 +28,8 @@ la texture animata vanilla `minecraft:block/nether_portal`, campionata dall'atla
 blocchi con colori e alpha originali, senza spirale procedurale. Un doppio bordo
 viola/ciano delimita la sagoma; particelle vanilla REVERSE_PORTAL circondano
 il volume dell'ovale, emesse da animateTick solo nello stato attivo e senza
-dipendenza dal frame rate. L'ovale si orienta verso la camera lungo l'asse verticale, resta
+dipendenza dal frame rate. Per impostazione predefinita l'ovale si orienta verso la camera lungo l'asse verticale.
+Il pannello della guida permette di fissarlo sul piano est–ovest con una preferenza locale al client. L'ovale resta
 visibile entro 32 blocchi e rispetta l'occlusione dei blocchi opachi. Non mostra
 la destinazione, non aggiunge collisioni o luce dinamica/bloom e non modifica
 il trasporto. Estrazione dello stato dal BlockState sincronizzato e disegno

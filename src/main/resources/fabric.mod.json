@@ -2,6 +2,7 @@
 	"schemaVersion": 1,
 	"id": "pointportals",
 	"version": "${version}",
+	"custom": { "pointportals:release_date": "${releaseDate}" },
 	"name": "Point-to-Point Portals",
 	"description": "Immersive, balanced 1-to-1 fast-travel portals powered by Redstone.",
 	"authors": [

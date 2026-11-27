@@ -14,6 +14,26 @@ public class PointPortalsSpanishLangProvider extends FabricLanguageProvider {
 
 	@Override
 	public void generateTranslations(HolderLookup.Provider registries, TranslationBuilder builder) {
+		builder.add("guide.pointportals.oval", "Orientación");
+		builder.add("guide.pointportals.oval_follow", "Seguir");
+		builder.add("guide.pointportals.oval_fixed", "Fija");
+		builder.add("guide.pointportals.hint", "Pulsa %s para abrir la guía de portales.");
+		builder.add("guide.pointportals.hint_unbound", "Asigna una tecla a la guía de portales en Opciones → Controles.");
+		builder.add("key.category.pointportals.portals", "Point-to-Point Portals");
+		builder.add("key.pointportals.guide", "Abrir la guía de portales");
+		builder.add("guide.pointportals.version", "Versión %s");
+		builder.add("guide.pointportals.release", "Lanzamiento %s");
+		builder.add("guide.pointportals.unreleased", "En desarrollo");
+		builder.add("guide.pointportals.changes", "Novedades de %s");
+		builder.add("guide.pointportals.appearance", "Ahora hay una guía y un aviso al entrar por primera vez. Usa Orientación para que el óvalo te siga o quede fijo de este a oeste. La elección se guarda.");
+		builder.add("guide.pointportals.cartography", "Mapas de portales");
+		builder.add("guide.pointportals.maps", "Usa un mapa lleno en cada base para marcarla. Agáchate y usa el mapa mirando al aire para ver el par. Las copias comparten los marcadores. Un mapa bloqueado los conserva tal como estaban.");
+		builder.add("guide.pointportals.pair", "Enlazar portales");
+		builder.add("guide.pointportals.pairing", "Coloca dos bases libres, incluso en dimensiones distintas. Usa el Sintonizador de fase en la primera y luego en la segunda. Cada base solo puede tener una pareja.");
+		builder.add("guide.pointportals.travel", "Viajar");
+		builder.add("guide.pointportals.power", "Alimenta la base de salida con redstone y súbete. Deja dos bloques libres sobre la de destino. Para volver, alimenta esa base, bájate y espera unos segundos antes de volver a subir.");
+		builder.add("guide.pointportals.unlink", "Desenlazar portales");
+		builder.add("guide.pointportals.unlinking", "Agáchate y usa el Sintonizador de fase vacío en una de las bases. Si ya hay una base seleccionada, el primer uso borra la selección.");
 		builder.add(ModBlocks.TELEPORTER, "Teletransportador punto a punto");
 		builder.add(ModItems.TUNER, "Sintonizador de fase");
 		builder.add("cartography.pointportals.pair", "%s ↔ %s");

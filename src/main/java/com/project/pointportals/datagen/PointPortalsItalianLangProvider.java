@@ -14,6 +14,26 @@ public class PointPortalsItalianLangProvider extends FabricLanguageProvider {
 
 	@Override
 	public void generateTranslations(HolderLookup.Provider registries, TranslationBuilder builder) {
+		builder.add("guide.pointportals.oval", "Orientamento");
+		builder.add("guide.pointportals.oval_follow", "Segui");
+		builder.add("guide.pointportals.oval_fixed", "Fisso");
+		builder.add("guide.pointportals.hint", "Premi %s per aprire il pannello e consultare la guida ai portali.");
+		builder.add("guide.pointportals.hint_unbound", "Assegna un tasto alla guida ai portali in Opzioni → Comandi.");
+		builder.add("key.category.pointportals.portals", "Point-to-Point Portals");
+		builder.add("key.pointportals.guide", "Apri la guida ai portali");
+		builder.add("guide.pointportals.version", "Versione %s");
+		builder.add("guide.pointportals.release", "Rilascio %s");
+		builder.add("guide.pointportals.unreleased", "In sviluppo");
+		builder.add("guide.pointportals.changes", "Novità della %s");
+		builder.add("guide.pointportals.appearance", "Ora hai una guida e un avviso al primo ingresso. Usa Orientamento qui sotto per ruotare l’ovale verso di te o fissarlo da est a ovest. La scelta viene salvata.");
+		builder.add("guide.pointportals.cartography", "Mappe dei portali");
+		builder.add("guide.pointportals.maps", "Usa una mappa compilata su una pedana per segnarla. Segna entrambe, poi accovacciati e usa la mappa guardando in aria per vedere la coppia. Le copie condividono i segni. Le mappe bloccate li conservano.");
+		builder.add("guide.pointportals.pair", "Collegare i portali");
+		builder.add("guide.pointportals.pairing", "Posa due pedane libere, anche in dimensioni diverse. Usa il Sintonizzatore di fase sulla prima, poi sulla seconda. Ogni pedana può avere un solo gemello.");
+		builder.add("guide.pointportals.travel", "Viaggiare");
+		builder.add("guide.pointportals.power", "Alimenta con redstone la pedana di partenza e salici. Lascia due blocchi liberi sopra quella di arrivo. Per tornare, alimenta anche questa pedana, scendi e attendi qualche secondo prima di risalire.");
+		builder.add("guide.pointportals.unlink", "Scollegare i portali");
+		builder.add("guide.pointportals.unlinking", "Accovacciati e usa il Sintonizzatore di fase vuoto su una delle pedane. Se hai già selezionato una pedana, il primo uso cancella la selezione.");
 		builder.add(ModBlocks.TELEPORTER, "Teletrasportatore punto a punto");
 		builder.add(ModItems.TUNER, "Sintonizzatore di fase");
 		builder.add("cartography.pointportals.pair", "%s ↔ %s");

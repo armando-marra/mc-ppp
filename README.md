@@ -13,6 +13,14 @@ Unlike traditional teleportation mods that rely on text menus or sprawling globa
 
 ## 🌟 Key Features
 
+The first time you enter a world, a notification shows the assigned key.
+Press **K** in a world to open the portal guide in your game language. It includes
+the installed version, release date, release highlights and instructions for pairing,
+travel, unlinking and marking portals on maps. The guide and its controls are available
+in English, Italian, Spanish, French and German. If K is already assigned, the guide tries keypad multiply,
+then keypad divide. If all three are occupied, choose a key under **Options →
+Controls → Key Binds → Point-to-Point Portals**. You can rebind it there at any time.
+
 ### 1. Dual-State Portal Block (`TeleporterBlock`)
 Each portal block operates through three clear visual and mechanical states:
 - **Inactive (Unlinked):** Freshly placed or unbound. The portal emits no light and does not teleport entities; POWERED still tracks Redstone.
@@ -22,8 +30,10 @@ Each portal block operates through three clear visual and mechanical states:
 Active Teleporters also display a vertical oval using
 the actual animated Nether portal texture, with its native colors and opacity.
 It retains a violet/cyan outline and vanilla portal particles around the oval.
-The effect faces the
-viewer and renders within 32 blocks. It vanishes without power or a link; stepping
+Use **Oval orientation** below the guide pages to switch between **Follow**
+(the default, which faces the viewer) and **Fixed** (east–west on every pad).
+The change takes effect immediately and the client saves it for future sessions.
+The oval renders within 32 blocks. It vanishes without power or a link; stepping
 onto the pad still triggers travel. This is a visual effect, not a view of the
 destination, and does not require a physical portal frame or add collision.
 
@@ -160,8 +170,8 @@ tests. The relaxed requirements apply starting with **0.0.11**; previously publi
 
 ## Releases
 
-The current project version is **0.2.1**. Preparing this version does not
-publish a release; publication starts only after pushing its version tag.
+The current project version is **0.2.2**. Publication starts after pushing
+the matching version tag.
 
 Release automation runs only when a `v*` tag is pushed. Pushes and pull requests
 on `devel` and `main` do not start Actions. Tests and benchmarks are not run by
@@ -171,7 +181,7 @@ release commit before tagging it. Benchmarks remain a separate, manual task.
 1. Set `mod_version` and add matching release notes in `CHANGELOG.md`, then commit.
 2. For a stable release, integrate that commit into `main` and verify it locally.
    For a release candidate, use a commit on `devel`.
-3. Create and push the matching tag, for example `v0.2.1` or `v0.2.1-rc.1`.
+3. Create and push the matching tag, for example `v0.2.2` or `v0.2.2-rc.1`.
    These are examples: the current version remains defined in `gradle.properties`.
 
 The [release workflow](.github/workflows/release.yml) checks the exact tagged
@@ -179,10 +189,10 @@ commit, branch ancestry, version and changelog before installing Java 25.
 It runs `bash ./gradlew --no-daemon jar sourcesJar`, verifies the resulting
 packages and publishes a GitHub Release with the mod JAR, sources JAR and
 `SHA256SUMS.txt`. Published files include the mod version, Minecraft version and
-loader: `pointportals-0.2.1-mc26.2-fabric.jar` and
-`pointportals-0.2.1-mc26.2-fabric-sources.jar`. These names are staged in
+loader: `pointportals-0.2.2-mc26.2-fabric.jar` and
+`pointportals-0.2.2-mc26.2-fabric-sources.jar`. These names are staged in
 `build/release`; original Gradle outputs in `build/libs` are unchanged.
-The tag remains plain SemVer with a `v` prefix, such as `v0.2.1`.
+The tag remains plain SemVer with a `v` prefix, such as `v0.2.2`.
 Only the runtime JAR requires expanded version metadata;
 the sources JAR includes the original resource template. RCs are prereleases;
 older stable versions do not replace a newer stable release as Latest.

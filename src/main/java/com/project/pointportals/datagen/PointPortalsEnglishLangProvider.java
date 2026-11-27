@@ -14,6 +14,26 @@ public class PointPortalsEnglishLangProvider extends FabricLanguageProvider {
 
 	@Override
 	public void generateTranslations(HolderLookup.Provider registries, TranslationBuilder builder) {
+		builder.add("guide.pointportals.oval", "Oval orientation");
+		builder.add("guide.pointportals.oval_follow", "Follow");
+		builder.add("guide.pointportals.oval_fixed", "Fixed");
+		builder.add("guide.pointportals.hint", "Press %s to open the portal guide.");
+		builder.add("guide.pointportals.hint_unbound", "Assign a key to the portal guide in Options → Controls.");
+		builder.add("key.category.pointportals.portals", "Point-to-Point Portals");
+		builder.add("key.pointportals.guide", "Open portal guide");
+		builder.add("guide.pointportals.version", "Version %s");
+		builder.add("guide.pointportals.release", "Released %s");
+		builder.add("guide.pointportals.unreleased", "Unreleased");
+		builder.add("guide.pointportals.changes", "Changes in %s");
+		builder.add("guide.pointportals.appearance", "This guide and its first-join hint are new. Use Oval orientation below to follow the viewer or fix the oval east–west. Your choice is saved.");
+		builder.add("guide.pointportals.cartography", "Portal maps");
+		builder.add("guide.pointportals.maps", "Use a filled map on a pad to mark it. Map both ends, then sneak and use the map while looking into the air to see the pair. Copies share markers. Locked maps keep a snapshot.");
+		builder.add("guide.pointportals.pair", "Pair two portals");
+		builder.add("guide.pointportals.pairing", "Place two unlinked pads, even in different dimensions. Use the Phase Tuner on the first pad, then on the second. Each pad can have only one twin.");
+		builder.add("guide.pointportals.travel", "Travel");
+		builder.add("guide.pointportals.power", "Power the departure pad with Redstone and step onto it. Leave two blocks clear above the destination. To return, power the other pad, step off and let the cooldown expire.");
+		builder.add("guide.pointportals.unlink", "Unlink a pair");
+		builder.add("guide.pointportals.unlinking", "Sneak and use an empty Phase Tuner on either pad. If the tuner holds a selection, the first use clears it.");
 		builder.add(ModBlocks.TELEPORTER, "Point-to-Point Teleporter");
 		builder.add(ModItems.TUNER, "Phase Tuner");
 		builder.add("cartography.pointportals.pair", "%s ↔ %s");

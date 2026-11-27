@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.2] - 2026-11-28
+
+### Added
+
+- A rebindable in-game portal guide, opened with K by default, shows the installed version, release date, release notes and instructions for pairing, travel, unlinking and mapping in all five supported languages.
+- On the first entry into a world, a one-time notification shows the assigned shortcut or explains where to assign one.
+- The guide offers two oval orientations. The default faces the viewer, and the fixed mode aligns the oval east–west. The client saves the choice for future sessions.
+
+---
+
 ## [0.2.1] - 2026-11-27
 
 ### Added

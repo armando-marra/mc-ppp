@@ -14,6 +14,26 @@ public class PointPortalsFrenchLangProvider extends FabricLanguageProvider {
 
 	@Override
 	public void generateTranslations(HolderLookup.Provider registries, TranslationBuilder builder) {
+		builder.add("guide.pointportals.oval", "Orientation");
+		builder.add("guide.pointportals.oval_follow", "Suivre");
+		builder.add("guide.pointportals.oval_fixed", "Fixe");
+		builder.add("guide.pointportals.hint", "Appuyez sur %s pour ouvrir le guide des portails.");
+		builder.add("guide.pointportals.hint_unbound", "Attribuez une touche au guide des portails dans Options → Contrôles.");
+		builder.add("key.category.pointportals.portals", "Point-to-Point Portals");
+		builder.add("key.pointportals.guide", "Ouvrir le guide des portails");
+		builder.add("guide.pointportals.version", "Version %s");
+		builder.add("guide.pointportals.release", "Sortie le %s");
+		builder.add("guide.pointportals.unreleased", "En développement");
+		builder.add("guide.pointportals.changes", "Nouveautés %s");
+		builder.add("guide.pointportals.appearance", "Découvrez le guide et l’avis à la première connexion. Le bouton Orientation permet de suivre votre position ou de fixer l’ovale d’est en ouest. Le choix est enregistré.");
+		builder.add("guide.pointportals.cartography", "Cartes des portails");
+		builder.add("guide.pointportals.maps", "Utilisez une carte remplie sur chaque socle pour le marquer. Accroupissez-vous et utilisez la carte en visant le ciel pour voir la paire. Les copies partagent les repères. Une carte verrouillée les fige.");
+		builder.add("guide.pointportals.pair", "Relier deux portails");
+		builder.add("guide.pointportals.pairing", "Posez deux socles libres, même dans des dimensions différentes. Utilisez le Syntoniseur de phase sur le premier, puis sur le second. Chaque socle a un seul partenaire.");
+		builder.add("guide.pointportals.travel", "Voyager");
+		builder.add("guide.pointportals.power", "Alimentez le socle de départ en redstone et montez dessus. Laissez deux blocs libres au-dessus de l’arrivée. Pour revenir, alimentez ce socle, descendez et attendez quelques secondes avant de remonter.");
+		builder.add("guide.pointportals.unlink", "Délier les portails");
+		builder.add("guide.pointportals.unlinking", "Accroupissez-vous et utilisez le Syntoniseur de phase vide sur un socle lié. Si un socle est sélectionné, la première utilisation efface la sélection.");
 		builder.add(ModBlocks.TELEPORTER, "Téléporteur point à point");
 		builder.add(ModItems.TUNER, "Syntoniseur de phase");
 		builder.add("cartography.pointportals.pair", "%s ↔ %s");
