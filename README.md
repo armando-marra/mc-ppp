@@ -27,7 +27,7 @@ viewer and renders within 32 blocks. It vanishes without power or a link; steppi
 onto the pad still triggers travel. This is a visual effect, not a view of the
 destination, and does not require a physical portal frame or add collision.
 
-Right-click a pad with a renamed name tag to give it a single-line label of up to
+Rename a name tag at an anvil, then right-click a pad with it to give it a single-line label of up to
 24 characters. You can label either endpoint as soon as you place it. The glowing
 letters follow its upper rim whenever it is linked and powered. Use another
 renamed tag to replace the label or a plain tag to clear it. The tag is reusable.
@@ -106,10 +106,10 @@ before running the wrapper; Loom also requires Java 25 to run Gradle itself.
 Keep machine-specific JDK paths in your user Gradle configuration, outside this repository.
 
 The development baseline is Minecraft 26.2, Fabric Loader 0.19.5 and Fabric API
-`0.159.0+26.2`. The current suite contains 38 server GameTests. Dedicated-server
+`0.159.0+26.2`. The current suite contains 39 server GameTests. Dedicated-server
 startup and clean shutdown were verified with the 0.0.11 packaged mod on this
-combination. The 0.1.2 real-client regression checks the oval's appearance,
-animation and activation states; broader gameplay and modpack checks remain separate. Earlier Loader
+combination. The 0.2.0 real-client regression checks the oval's appearance,
+animation, label visibility and activation states; broader gameplay and modpack checks remain separate. Earlier Loader
 0.19.x versions and Minecraft versions before 26.2 are not supported by this
 change. A real-client gameplay check remains separate from these automated
 tests. The relaxed requirements apply starting with **0.0.11**; previously published
@@ -147,7 +147,7 @@ tests. The relaxed requirements apply starting with **0.0.11**; previously publi
 
 ## Releases
 
-The current project version is **0.1.2**. Preparing this version does not
+The current project version is **0.2.0**. Preparing this version does not
 publish a release; publication starts only after pushing its version tag.
 
 Release automation runs only when a `v*` tag is pushed. Pushes and pull requests
@@ -158,7 +158,7 @@ release commit before tagging it. Benchmarks remain a separate, manual task.
 1. Set `mod_version` and add matching release notes in `CHANGELOG.md`, then commit.
 2. For a stable release, integrate that commit into `main` and verify it locally.
    For a release candidate, use a commit on `devel`.
-3. Create and push the matching tag, for example `v0.1.2` or `v0.1.2-rc.1`.
+3. Create and push the matching tag, for example `v0.2.0` or `v0.2.0-rc.1`.
    These are examples: the current version remains defined in `gradle.properties`.
 
 The [release workflow](.github/workflows/release.yml) checks the exact tagged
@@ -166,10 +166,10 @@ commit, branch ancestry, version and changelog before installing Java 25.
 It runs `bash ./gradlew --no-daemon jar sourcesJar`, verifies the resulting
 packages and publishes a GitHub Release with the mod JAR, sources JAR and
 `SHA256SUMS.txt`. Published files include the mod version, Minecraft version and
-loader: `pointportals-0.1.2-mc26.2-fabric.jar` and
-`pointportals-0.1.2-mc26.2-fabric-sources.jar`. These names are staged in
+loader: `pointportals-0.2.0-mc26.2-fabric.jar` and
+`pointportals-0.2.0-mc26.2-fabric-sources.jar`. These names are staged in
 `build/release`; original Gradle outputs in `build/libs` are unchanged.
-The tag remains plain SemVer with a `v` prefix, such as `v0.1.2`.
+The tag remains plain SemVer with a `v` prefix, such as `v0.2.0`.
 Only the runtime JAR requires expanded version metadata;
 the sources JAR includes the original resource template. RCs are prereleases;
 older stable versions do not replace a newer stable release as Latest.

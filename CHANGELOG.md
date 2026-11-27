@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0] - 2026-11-27
+
+### Added
+
+- Give each Teleporter its own label using a name tag renamed at an anvil. Labels accept one line of up to 24 characters and can be set immediately after placement. Use another renamed tag to edit the text or a plain tag to clear it. Tags are reusable.
+- Glowing cyan letters with a violet outline follow the upper rim while the pad is linked and powered. The pad keeps its label across power loss, unlinking and world reloads.
+- Label feedback is available in English, Italian, Spanish, French and German.
+
+### Validation
+
+- A server GameTest covers labeling before pairing, persistence, independent endpoints, activation, replacement, length validation and clearing. The client regression compares a labeled oval with a bare oval and checks label visibility after power loss and unlinking.
+
+---
+
 ## [0.1.2] - 2026-11-14
 
 ### Added

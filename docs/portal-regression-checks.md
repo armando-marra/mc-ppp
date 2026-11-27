@@ -3,8 +3,8 @@
 ## Automated server tests
 
 The default compatibility baseline in `gradle.properties` is Minecraft 26.2,
-Fabric Loader 0.19.5 and Fabric API `0.159.0+26.2`. The 0.1.2 suite contains
-38 regression tests. The 0.0.11 packaged runtime JAR was also loaded by
+Fabric Loader 0.19.5 and Fabric API `0.159.0+26.2`. The 0.2.0 suite contains
+39 regression tests. The 0.0.11 packaged runtime JAR was also loaded by
 an isolated Fabric production server using those versions: mod registration,
 world startup (`Done`) and clean shutdown succeeded. This startup check does
 not establish real-client rendering, networking or gameplay correctness with
@@ -42,8 +42,13 @@ Three tuner regression tests additionally invoke `ServerPlayerGameMode.useItemOn
 instead of calling the item directly: main-hand Survival/Creative and offhand
 dispatch. They verify selection, pairing, sneak unlinking and empty-hand inspection.
 The main-hand cases reproduced the block status interaction consuming the click
-before `TunerItem.useOn`; the fixed full build passes all 38 tests. A real-client
+before `TunerItem.useOn`; the fix restored normal click handling. A real-client
 click check remains necessary, including main-hand/offhand selection by the client.
+
+The label test names an unlinked pad through the player interaction dispatcher,
+reconstructs it from saved metadata, then pairs and powers the original pad.
+It checks independent endpoint labels, rejects oversized text and exercises
+replacement and clearing with name tags.
 
 Tuner tests invoke the actual item interaction with a mock survival player.
 They check component selection, pairing and power state, self-link refusal,
@@ -69,19 +74,21 @@ instead of the regression suites and creates a fresh run directory. It checks
 loaded/unloaded/new-target fixtures, actual tuner interactions and transfers,
 missing-target recovery, reciprocal links, arrival identity/position/rotation,
 cooldown and eventual target unload after fixture and vanilla tickets expire.
-The normal build still selects all five regression suites (38 total tests,
+The normal build still selects all five regression suites (39 total tests,
 including Fabric's own test); benchmark classes are never distributed in the JAR.
 
 ## Manual checks
 
-### Oval effect client regression (0.1.2)
+### Oval and label client regression (0.2.0)
 
 Run `./gradlew runPortalClientTest` in a graphical session. A separate client-only
 test mod creates an isolated singleplayer world under `build/portal-client-test`,
 links a pair, powers one pad and captures active/animated, standby and powered-but-
 unlinked frames. It checks activation from the real client BlockEntity, visible
 Nether-textured oval disappearance, native sprite animation between frames and
-level-12 light on both linked states. Screenshots are in
+level-12 light on both linked states. It also compares frames of the same active
+oval with and without a label and checks that the client retains the text when
+power or the link is lost. Screenshots are in
 `build/portal-client-test/screenshots/`. These checks are opt-in and do not run as
 part of `build`; client test classes/resources are not packaged in the mod JAR.
 The normal server suite continues to verify teleportation behavior separately.
