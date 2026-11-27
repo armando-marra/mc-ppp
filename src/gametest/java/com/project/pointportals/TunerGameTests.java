@@ -9,17 +9,21 @@ import com.project.pointportals.registry.ModItems;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -62,6 +66,47 @@ public class TunerGameTests {
 			player.setItemInHand(hand, ItemStack.EMPTY);
 			test.assertTrue(playerClick(player, InteractionHand.MAIN_HAND, a.getBlockPos()).consumesAction(),
 				"Empty-hand portal inspection must still work");
+			test.succeed();
+		} finally {
+			test.getLevel().getServer().getPlayerList().remove(player);
+			player.discard();
+		}
+	}
+
+	@GameTest
+	@SuppressWarnings("removal")
+	public void labelBeforePairing(GameTestHelper test) {
+		var portal = portal(test, A);
+		var twin = portal(test, B);
+		var player = test.makeMockServerPlayerInLevel();
+		var tag = new ItemStack(Items.NAME_TAG);
+		var name = DataComponents.CUSTOM_NAME;
+		try {
+			player.setGameMode(GameType.SURVIVAL);
+			player.setItemInHand(InteractionHand.MAIN_HAND, tag);
+			tag.set(name, Component.literal("Miniere del Nord"));
+			playerClick(player, InteractionHand.MAIN_HAND, portal.getBlockPos());
+			var saved = portal.saveWithFullMetadata(test.getLevel().registryAccess());
+			var restored = (TeleporterBlockEntity) BlockEntity.loadStatic(
+				portal.getBlockPos(), portal.getBlockState(), saved, test.getLevel().registryAccess());
+			test.assertTrue(restored != null && restored.getLabel().equals("Miniere del Nord"), "Unlinked pad must save its label");
+			player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.TUNER));
+			playerClick(player, InteractionHand.MAIN_HAND, portal.getBlockPos());
+			playerClick(player, InteractionHand.MAIN_HAND, twin.getBlockPos());
+			test.assertTrue(twin.getLabel().isEmpty(), "Each endpoint owns its own label");
+			test.getLevel().setBlockAndUpdate(portal.getBlockPos().below(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+			test.assertTrue(portal.getBlockState().getValue(TeleporterBlock.POWERED) && portal.getLabel().equals("Miniere del Nord"),
+				"Powering the linked portal must preserve the original label");
+			player.setItemInHand(InteractionHand.MAIN_HAND, tag);
+			tag.set(name, Component.literal("A".repeat(25)));
+			playerClick(player, InteractionHand.MAIN_HAND, portal.getBlockPos());
+			test.assertTrue(portal.getLabel().equals("Miniere del Nord"), "Oversized label must leave previous text intact");
+			tag.set(name, Component.literal("Città"));
+			playerClick(player, InteractionHand.MAIN_HAND, portal.getBlockPos());
+			test.assertTrue(portal.getLabel().equals("Città"), "Named tag must replace the active label");
+			tag.remove(name);
+			playerClick(player, InteractionHand.MAIN_HAND, portal.getBlockPos());
+			test.assertTrue(portal.getLabel().isEmpty(), "Plain name tag must clear the label");
 			test.succeed();
 		} finally {
 			test.getLevel().getServer().getPlayerList().remove(player);

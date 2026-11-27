@@ -7,6 +7,7 @@ import com.project.pointportals.registry.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -156,6 +158,21 @@ public class TeleporterBlock extends Block implements EntityBlock {
 		// Let ItemStack.useOn reach the tuner before the block's status interaction.
 		if (stack.is(ModItems.TUNER)) {
 			return InteractionResult.PASS;
+		}
+		if (stack.is(Items.NAME_TAG)) {
+			if (!level.isClientSide() && level.getBlockEntity(pos) instanceof TeleporterBlockEntity portal && player.mayBuild()) {
+				Component name = stack.get(DataComponents.CUSTOM_NAME);
+				String label = name == null ? "" : name.getString().strip();
+				if (label.codePointCount(0, label.length()) > TeleporterBlockEntity.MAX_LABEL_LENGTH
+					|| label.codePoints().anyMatch(Character::isISOControl)) {
+					player.sendOverlayMessage(Component.translatable("message.pointportals.label_invalid", TeleporterBlockEntity.MAX_LABEL_LENGTH));
+				} else {
+					portal.setLabel(label);
+					player.sendOverlayMessage(label.isEmpty() ? Component.translatable("message.pointportals.label_cleared")
+						: Component.translatable("message.pointportals.label_set", label));
+				}
+			}
+			return InteractionResult.SUCCESS;
 		}
 		return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
 	}

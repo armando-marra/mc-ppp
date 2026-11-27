@@ -38,6 +38,21 @@ import org.jspecify.annotations.Nullable;
 public class TeleporterBlockEntity extends BlockEntity {
 	private static final int LINK_CHECK_INTERVAL = 40;
 	private @Nullable PortalTarget twinTarget;
+	public static final int MAX_LABEL_LENGTH = 24;
+	private String label = "";
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		if (this.label.equals(label)) return;
+		this.label = label;
+		setChanged();
+		if (level instanceof ServerLevel server) {
+			server.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+		}
+	}
 
 	public TeleporterBlockEntity(BlockPos worldPosition, BlockState blockState) {
 		super(ModBlockEntities.TELEPORTER, worldPosition, blockState);
@@ -359,12 +374,14 @@ public class TeleporterBlockEntity extends BlockEntity {
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
+		if (!label.isEmpty()) output.putString("label", label);
 		output.storeNullable("twin_target", PortalTarget.CODEC, this.twinTarget);
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
+		label = input.getStringOr("label", "");
 		this.twinTarget = input.read("twin_target", PortalTarget.CODEC).orElse(null);
 	}
 

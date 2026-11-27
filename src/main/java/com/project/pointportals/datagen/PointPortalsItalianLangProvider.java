@@ -26,6 +26,9 @@ public class PointPortalsItalianLangProvider extends FabricLanguageProvider {
 		builder.add("message.pointportals.portals_linked", "Portali abbinati! Alimentali con redstone per attivarli.");
 		builder.add("message.pointportals.portals_unlinked", "Collegamento tra i portali rimosso.");
 		builder.add("message.pointportals.tuner_cleared", "Memoria del sintonizzatore di fase cancellata.");
+		builder.add("message.pointportals.label_set", "Etichetta del portale: %s");
+		builder.add("message.pointportals.label_cleared", "Etichetta del portale rimossa.");
+		builder.add("message.pointportals.label_invalid", "Usa una sola riga di massimo %s caratteri.");
 		builder.add("message.pointportals.status_unlinked", "Il teletrasportatore non è collegato. Usa un sintonizzatore di fase per abbinarlo.");
 		builder.add("message.pointportals.status_standby", "Teletrasportatore collegato a %s alle coordinate [%s, %s, %s] (In attesa: richiede redstone).");
 		builder.add("message.pointportals.status_active", "Teletrasportatore collegato a %s alle coordinate [%s, %s, %s] (Attivo).");

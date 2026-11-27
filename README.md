@@ -27,6 +27,11 @@ viewer and renders within 32 blocks. It vanishes without power or a link; steppi
 onto the pad still triggers travel. This is a visual effect, not a view of the
 destination, and does not require a physical portal frame or add collision.
 
+Right-click a pad with a renamed name tag to give it a single-line label of up to
+24 characters. You can label either endpoint as soon as you place it. The glowing
+letters follow its upper rim whenever it is linked and powered. Use another
+renamed tag to replace the label or a plain tag to clear it. The tag is reusable.
+
 ![Actual client screenshot of the animated oval above an active Teleporter.](docs/artwork/oval-portal-concept/implemented-active.png)
 
 > **Link recovery:** Removal immediately unlinks a loaded reciprocal twin. If the twin is unloaded, reconciliation is deferred until both endpoints can be inspected. Periodic checks every 40 ticks do not load remote chunks; interactions and transport attempts can resolve them synchronously.

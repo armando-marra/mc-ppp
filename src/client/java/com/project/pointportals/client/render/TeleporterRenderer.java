@@ -6,6 +6,8 @@ import com.mojang.math.Axis;
 import com.project.pointportals.block.TeleporterBlock;
 import com.project.pointportals.block.entity.TeleporterBlockEntity;
 import com.project.pointportals.registry.ModBlocks;
+import java.util.Arrays;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -15,7 +17,11 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.FormattedCharSink;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -36,10 +42,24 @@ public final class TeleporterRenderer implements BlockEntityRenderer<TeleporterB
 			OUTLINE_X[i] = (i < ROWS ? 1 : -1) * (float) Math.sqrt(Math.max(0, 1 - y * y));
 		}
 	}
+	// Distances from the crown along one half of the label baseline, in blocks.
+	private static final float LABEL_RX = HALF_WIDTH * 1.10F;
+	private static final float LABEL_RY = HALF_HEIGHT * 1.10F;
+	private static final float ARC_STEP = 1.22F / ROWS;
+	private static final float[] ARC_LENGTH = new float[ROWS + 1];
+	static {
+		for (int i = 1; i <= ROWS; i++) {
+			double angle = (i - 0.5) * ARC_STEP;
+			ARC_LENGTH[i] = ARC_LENGTH[i - 1] + ARC_STEP * (float) Math.hypot(
+				LABEL_RX * Math.cos(angle), LABEL_RY * Math.sin(angle));
+		}
+	}
+	private final Font font;
 	private final SpriteGetter sprites;
 
 	public TeleporterRenderer(BlockEntityRendererProvider.Context context) {
 		sprites = context.sprites();
+		font = context.font();
 	}
 
 	@Override
@@ -54,6 +74,7 @@ public final class TeleporterRenderer implements BlockEntityRenderer<TeleporterB
 		var block = blockEntity.getBlockState();
 		state.active = block.is(ModBlocks.TELEPORTER)
 			&& block.getValue(TeleporterBlock.LINKED) && block.getValue(TeleporterBlock.POWERED);
+		state.label = state.active ? blockEntity.getLabel() : "";
 		if (!state.active) return;
 		// The block atlas advances the vanilla animation, including resource-pack overrides.
 		var sprite = sprites.get(PORTAL);
@@ -76,7 +97,46 @@ public final class TeleporterRenderer implements BlockEntityRenderer<TeleporterB
 		collector.submitCustomGeometry(poses, PORTAL.renderType(RenderTypes::entityTranslucentEmissive),
 			(pose, vertices) -> draw(pose, vertices, u0, u1, v0, v1));
 		collector.submitCustomGeometry(poses, RenderTypes.debugQuads(), TeleporterRenderer::drawRim);
+		if (!state.label.isEmpty()) submitLabel(state.label, poses, collector);
 		poses.popPose();
+	}
+
+	private void submitLabel(String label, PoseStack poses, SubmitNodeCollector collector) {
+		var text = Component.literal(label).getVisualOrderText();
+		int width = font.width(text);
+		if (width == 0) return;
+		float scale = Math.min(0.025F, 2 * ARC_LENGTH[ROWS] / width);
+		text.accept(new FormattedCharSink() {
+			float distance = -width * scale / 2;
+
+			@Override
+			public boolean accept(int index, Style style, int codePoint) {
+				var glyph = FormattedCharSequence.codepoint(codePoint, style);
+				int advance = font.width(glyph);
+				float center = distance + advance * scale / 2;
+				distance += advance * scale;
+				if (Character.isWhitespace(codePoint)) return true;
+				float angle = angleAtDistance(center);
+				float sin = (float) Math.sin(angle), cos = (float) Math.cos(angle);
+				poses.pushPose();
+				poses.translate(LABEL_RX * sin, LABEL_RY * cos, 0.005F);
+				poses.mulPose(Axis.ZP.rotation((float) Math.atan2(-LABEL_RY * sin, LABEL_RX * cos)));
+				poses.scale(scale, -scale, scale);
+				collector.submitText(poses, -advance / 2F, -font.lineHeight, glyph, false,
+					Font.DisplayMode.NORMAL, 15728880, 0xFF50F0FF, 0, 0xFFAE48FF);
+				poses.popPose();
+				return true;
+			}
+		});
+	}
+
+	private static float angleAtDistance(float distance) {
+		float length = Math.min(Math.abs(distance), ARC_LENGTH[ROWS]);
+		int index = Arrays.binarySearch(ARC_LENGTH, length);
+		if (index >= 0) return Math.copySign(index * ARC_STEP, distance);
+		int upper = -index - 1;
+		float fraction = (length - ARC_LENGTH[upper - 1]) / (ARC_LENGTH[upper] - ARC_LENGTH[upper - 1]);
+		return Math.copySign((upper - 1 + fraction) * ARC_STEP, distance);
 	}
 
 	private static void draw(PoseStack.Pose pose, VertexConsumer vertices, float u0, float u1, float v0, float v1) {
