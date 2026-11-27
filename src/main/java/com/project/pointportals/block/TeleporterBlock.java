@@ -1,6 +1,8 @@
 package com.project.pointportals.block;
 
 import com.project.pointportals.block.entity.TeleporterBlockEntity;
+import com.project.pointportals.cartography.PortalMapMarker;
+import com.project.pointportals.cartography.PortalMapIndex;
 import com.project.pointportals.component.PortalTarget;
 import com.project.pointportals.registry.ModBlockEntities;
 import com.project.pointportals.registry.ModItems;
@@ -20,6 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -31,6 +34,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
@@ -158,6 +162,23 @@ public class TeleporterBlock extends Block implements EntityBlock {
 		// Let ItemStack.useOn reach the tuner before the block's status interaction.
 		if (stack.is(ModItems.TUNER)) {
 			return InteractionResult.PASS;
+		}
+		if (stack.is(Items.FILLED_MAP)) {
+			if (level instanceof ServerLevel server) {
+				var map = MapItem.getSavedData(stack, level);
+				if (map == null || map.locked || !map.dimension.equals(level.dimension())
+					|| !PortalMapMarker.covers(map, pos) || !(level.getBlockEntity(pos) instanceof TeleporterBlockEntity portal)
+					|| !player.mayBuild()) {
+					return InteractionResult.FAIL;
+				}
+				var storage = PortalMapMarker.storage(map);
+				if (!storage.pointportals$hasMarker(pos)
+					&& map.isTrackedCountOverLimit(MapItemSavedData.TRACKED_DECORATION_LIMIT - 1)) {
+					return InteractionResult.FAIL;
+				}
+				storage.pointportals$putMarker(PortalMapIndex.register(server, portal));
+			}
+			return InteractionResult.SUCCESS;
 		}
 		if (stack.is(Items.NAME_TAG)) {
 			if (!level.isClientSide() && level.getBlockEntity(pos) instanceof TeleporterBlockEntity portal && player.mayBuild()) {

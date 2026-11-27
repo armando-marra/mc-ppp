@@ -16,6 +16,9 @@ public class PointPortalsEnglishLangProvider extends FabricLanguageProvider {
 	public void generateTranslations(HolderLookup.Provider registries, TranslationBuilder builder) {
 		builder.add(ModBlocks.TELEPORTER, "Point-to-Point Teleporter");
 		builder.add(ModItems.TUNER, "Phase Tuner");
+		builder.add("cartography.pointportals.pair", "%s ↔ %s");
+		builder.add("cartography.pointportals.no_pairs", "No mapped portal pairs.");
+		builder.add("cartography.pointportals.unnamed", "Portal (%s, %s, %s)");
 		builder.add("tooltip.pointportals.tuner_unbound", "Right-click an unlinked Teleporter to begin pairing.");
 		builder.add("tooltip.pointportals.tuner_target", "Armed: Bound to %s at [%s, %s, %s]");
 		builder.add("message.pointportals.first_portal_selected", "First portal captured at [%s, %s, %s]. Select the target portal.");

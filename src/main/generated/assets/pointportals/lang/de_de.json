@@ -1,5 +1,8 @@
 {
   "block.pointportals.teleporter": "Punkt-zu-Punkt-Teleporter",
+  "cartography.pointportals.no_pairs": "Keine kartierten Portalpaare.",
+  "cartography.pointportals.pair": "%s ↔ %s",
+  "cartography.pointportals.unnamed": "Portal (%s, %s, %s)",
   "item.pointportals.tuner": "Phasenabstimmer",
   "message.pointportals.already_linked": "Dieses Portal ist bereits mit einem anderen Ziel verknüpft.",
   "message.pointportals.cannot_self_link": "Ein Portal kann nicht mit sich selbst verknüpft werden!",

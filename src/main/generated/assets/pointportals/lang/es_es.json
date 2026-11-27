@@ -1,5 +1,8 @@
 {
   "block.pointportals.teleporter": "Teletransportador punto a punto",
+  "cartography.pointportals.no_pairs": "No hay pares de portales registrados.",
+  "cartography.pointportals.pair": "%s ↔ %s",
+  "cartography.pointportals.unnamed": "Portal (%s, %s, %s)",
   "item.pointportals.tuner": "Sintonizador de fase",
   "message.pointportals.already_linked": "Este portal ya está vinculado a otro destino.",
   "message.pointportals.cannot_self_link": "¡No puedes vincular un portal consigo mismo!",

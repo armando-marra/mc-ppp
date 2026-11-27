@@ -1,6 +1,7 @@
 package com.project.pointportals.block.entity;
 
 import com.project.pointportals.block.TeleporterBlock;
+import com.project.pointportals.cartography.PortalMapIndex;
 import com.project.pointportals.component.PortalTarget;
 import com.project.pointportals.diagnostics.PortalChunkLoads;
 import com.project.pointportals.registry.ModBlockEntities;
@@ -50,6 +51,7 @@ public class TeleporterBlockEntity extends BlockEntity {
 		this.label = label;
 		setChanged();
 		if (level instanceof ServerLevel server) {
+			PortalMapIndex.update(server, this);
 			server.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
 		}
 	}
@@ -69,8 +71,9 @@ public class TeleporterBlockEntity extends BlockEntity {
 	public void setTwinTarget(@Nullable PortalTarget target) {
 		this.twinTarget = target;
 		this.setChanged();
-		if (this.level != null && !this.level.isClientSide()) {
-			this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+		if (this.level instanceof ServerLevel server) {
+			PortalMapIndex.update(server, this);
+			server.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
 		}
 	}
 
@@ -82,7 +85,8 @@ public class TeleporterBlockEntity extends BlockEntity {
 		this.twinTarget = null;
 		this.setChanged();
 
-		if (this.level != null && !this.level.isClientSide()) {
+		if (this.level instanceof ServerLevel server) {
+			PortalMapIndex.update(server, this);
 			BlockState state = this.getBlockState();
 			if (state.is(ModBlocks.TELEPORTER)) {
 				boolean wasPowered = state.getValue(TeleporterBlock.POWERED);
@@ -325,7 +329,8 @@ public class TeleporterBlockEntity extends BlockEntity {
 	@Override
 	public void preRemoveSideEffects(BlockPos pos, BlockState state) {
 		super.preRemoveSideEffects(pos, state);
-		if (this.level != null && !this.level.isClientSide()) {
+		if (this.level instanceof ServerLevel server) {
+			PortalMapIndex.remove(server, PortalTarget.of(server, pos));
 			this.notifyTwinOfRemoval();
 		}
 	}

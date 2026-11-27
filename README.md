@@ -56,6 +56,18 @@ To eliminate infinite ping-pong loops when arriving at a destination:
 - Original 32×32 textures for the Phase Tuner and all three Teleporter states.
 - English, Italian, Spanish, French and German names, tooltips and gameplay messages follow the language selected in the Minecraft client.
 
+### 6. Portal Cartography
+
+Right-click a Teleporter with a filled map that covers its location in the same dimension. The map shows a portal icon and the pad's label, including when displayed in an item frame.
+
+![Filled map held in hand showing the Casa portal icon and label, with a copy displayed in the background.](docs/images/portal-map-held.png)
+
+Copies share their markers. Enlarging a map keeps markers within the new area, and locking a map preserves its current icons and labels. Renaming or breaking a portal updates maps that are still editable.
+
+Hold the map, sneak and right-click while looking into the air to see its linked portal pairs. Both endpoints must have been mapped. They can be on different maps or in different dimensions.
+
+![Details opened from the held map showing the pair Casa and Miniera.](docs/images/portal-map-pair-details.png)
+
 ---
 
 ## 🛠️ Crafting Recipes
@@ -106,10 +118,11 @@ before running the wrapper; Loom also requires Java 25 to run Gradle itself.
 Keep machine-specific JDK paths in your user Gradle configuration, outside this repository.
 
 The development baseline is Minecraft 26.2, Fabric Loader 0.19.5 and Fabric API
-`0.159.0+26.2`. The current suite contains 39 server GameTests. Dedicated-server
+`0.159.0+26.2`. The current suite contains 41 server GameTests. Dedicated-server
 startup and clean shutdown were verified with the 0.0.11 packaged mod on this
-combination. The 0.2.0 real-client regression checks the oval's appearance,
-animation, label visibility and activation states; broader gameplay and modpack checks remain separate. Earlier Loader
+combination. The real-client regression checks the oval's appearance,
+animation, label visibility and activation states, plus map rendering, copies,
+pair details and persistence across world reloads. Earlier Loader
 0.19.x versions and Minecraft versions before 26.2 are not supported by this
 change. A real-client gameplay check remains separate from these automated
 tests. The relaxed requirements apply starting with **0.0.11**; previously published
@@ -147,7 +160,7 @@ tests. The relaxed requirements apply starting with **0.0.11**; previously publi
 
 ## Releases
 
-The current project version is **0.2.0**. Preparing this version does not
+The current project version is **0.2.1**. Preparing this version does not
 publish a release; publication starts only after pushing its version tag.
 
 Release automation runs only when a `v*` tag is pushed. Pushes and pull requests
@@ -158,7 +171,7 @@ release commit before tagging it. Benchmarks remain a separate, manual task.
 1. Set `mod_version` and add matching release notes in `CHANGELOG.md`, then commit.
 2. For a stable release, integrate that commit into `main` and verify it locally.
    For a release candidate, use a commit on `devel`.
-3. Create and push the matching tag, for example `v0.2.0` or `v0.2.0-rc.1`.
+3. Create and push the matching tag, for example `v0.2.1` or `v0.2.1-rc.1`.
    These are examples: the current version remains defined in `gradle.properties`.
 
 The [release workflow](.github/workflows/release.yml) checks the exact tagged
@@ -166,10 +179,10 @@ commit, branch ancestry, version and changelog before installing Java 25.
 It runs `bash ./gradlew --no-daemon jar sourcesJar`, verifies the resulting
 packages and publishes a GitHub Release with the mod JAR, sources JAR and
 `SHA256SUMS.txt`. Published files include the mod version, Minecraft version and
-loader: `pointportals-0.2.0-mc26.2-fabric.jar` and
-`pointportals-0.2.0-mc26.2-fabric-sources.jar`. These names are staged in
+loader: `pointportals-0.2.1-mc26.2-fabric.jar` and
+`pointportals-0.2.1-mc26.2-fabric-sources.jar`. These names are staged in
 `build/release`; original Gradle outputs in `build/libs` are unchanged.
-The tag remains plain SemVer with a `v` prefix, such as `v0.2.0`.
+The tag remains plain SemVer with a `v` prefix, such as `v0.2.1`.
 Only the runtime JAR requires expanded version metadata;
 the sources JAR includes the original resource template. RCs are prereleases;
 older stable versions do not replace a newer stable release as Latest.

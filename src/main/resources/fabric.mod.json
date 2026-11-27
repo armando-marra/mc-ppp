@@ -24,6 +24,7 @@
 			"com.project.pointportals.datagen.PointPortalsDataGenerator"
 		]
 	},
+	"mixins": ["pointportals.mixins.json"],
 	"depends": {
 		"fabricloader": ">=0.19.5",
 		"minecraft": ">=26.2",

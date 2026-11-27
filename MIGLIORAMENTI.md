@@ -2,7 +2,15 @@
 
 Aggiornato al 27 novembre 2026.
 
-## Punto di ripresa corrente — versione 0.2.0
+## Punto di ripresa corrente — versione 0.2.1
+
+Le mappe vanilla possono registrare i portali con icona ed etichetta.
+Le copie condividono i segnaposti, mentre il blocco della mappa conserva
+nomi e simboli del momento. I dettagli mostrano le coppie cartografate
+anche tra dimensioni diverse. La suite comprende 41 GameTest server e
+una verifica grafica della cartografia.
+
+## Storico — release 0.2.0
 
 Ogni pedana può ricevere un’etichetta dalla posa. Il server conserva il testo
 per ciascuna estremità e lo sincronizza con il client. La scritta segue il

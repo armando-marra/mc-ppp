@@ -1,6 +1,6 @@
 # Point-to-Point Portals — progetto e stato
 
-**Versione:** 0.2.0.
+**Versione:** 0.2.1.
 
 **Target:** Minecraft Java Edition 26.2+, Fabric Loader >= 0.19.5, Fabric API >= 0.159.0 per Minecraft 26.2.
 **Toolchain:** Java 25, Gradle 9.x, Fabric Loom 1.19+, mappings ufficiali Mojang.
@@ -55,6 +55,23 @@ Usa il ticket vanilla temporaneo di arrivo, senza forzature permanenti dei chunk
 Il cooldown è di 60 tick dopo il trasferimento; la permanenza sulla pedana lo
 rinnova a 40 tick. Occorre allontanarsi e attenderne la scadenza per tornare.
 Non esiste una modalità configurabile di attivazione tramite sneak.
+
+## Cartografia dei portali
+
+Usare una mappa compilata su un teletrasportatore lo registra se la mappa è
+modificabile e copre il blocco nella sua dimensione. La decorazione usa
+l'etichetta del portale, quando presente, ed è visibile anche in cornice.
+I segnaposti appartengono all'ID mappa condiviso dalle copie. Rinomina e
+distruzione aggiornano le mappe modificabili quando vengono consultate o
+esposte. Lo scollegamento e lo scaricamento del chunk conservano il segnaposto.
+
+L'ingrandimento trasferisce i segnaposti che rientrano nella nuova area. Il
+blocco della mappa conserva icone e nomi come fotografia del momento.
+Con la mappa in mano, accovacciarsi e usare l'oggetto guardando in aria apre
+una pagina per ogni coppia reciproca di cui sono stati cartografati entrambi
+gli estremi, anche su mappe diverse. Riaprire i dettagli mostra i collegamenti
+aggiornati. Il server legge i dati dei portali già registrati senza caricare
+i relativi chunk.
 
 ## Progressione e asset
 

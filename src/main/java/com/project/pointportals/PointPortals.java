@@ -1,5 +1,8 @@
 package com.project.pointportals;
 
+import com.project.pointportals.cartography.PortalMapDetails;
+import com.project.pointportals.cartography.PortalMapMarker;
+import com.project.pointportals.cartography.PortalMapIndex;
 import com.project.pointportals.registry.ModBlockEntities;
 import com.project.pointportals.registry.ModBlocks;
 import com.project.pointportals.registry.ModDataComponents;
@@ -21,6 +24,9 @@ public class PointPortals implements ModInitializer {
 		ModBlocks.initialize();
 		ModBlockEntities.initialize();
 		ModItems.initialize();
+		PortalMapMarker.initialize();
+		PortalMapIndex.initialize();
+		PortalMapDetails.initialize();
 
 		LOGGER.info("Point-to-Point Portals registration complete");
 	}
