@@ -32,7 +32,7 @@ Rename a name tag at an anvil, then right-click a pad with it to give it a singl
 letters follow its upper rim whenever it is linked and powered. Use another
 renamed tag to replace the label or a plain tag to clear it. The tag is reusable.
 
-![Actual client screenshot of the animated oval above an active Teleporter.](docs/artwork/oval-portal-concept/implemented-active.png)
+![Active Teleporter with the glowing label “Miniere del Nord” following the upper rim.](docs/images/labeled-portal.png)
 
 > **Link recovery:** Removal immediately unlinks a loaded reciprocal twin. If the twin is unloaded, reconciliation is deferred until both endpoints can be inspected. Periodic checks every 40 ticks do not load remote chunks; interactions and transport attempts can resolve them synchronously.
 
