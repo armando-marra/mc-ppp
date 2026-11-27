@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.1] - 2026-11-27
+
+### Added
+
+- Register a Teleporter on a filled vanilla map by using the map on the pad. The custom icon reuses the existing portal label and appears on held and framed maps.
+- Copies share live markers. Enlarged maps retain markers within their new area. Locked maps preserve the icons and labels present at the time of locking.
+- Sneak and use a held map while looking into the air to see pairs with both endpoints mapped. Pair details work across dimensions and can be read while the twin's chunk is unloaded.
+- Screenshots in the README show the held map and its pair details.
+
+### Validation
+
+- The server suite covers registration, duplicate clicks, map bounds, cartography table operations and cross-dimensional pairs. The real-client test checks held and framed markers, the pair details screen, renames, removal and persistence after reopening the world.
+
+---
+
 ## [0.2.0] - 2026-11-27
 
 ### Added

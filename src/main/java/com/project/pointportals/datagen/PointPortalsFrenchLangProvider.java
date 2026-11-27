@@ -16,6 +16,9 @@ public class PointPortalsFrenchLangProvider extends FabricLanguageProvider {
 	public void generateTranslations(HolderLookup.Provider registries, TranslationBuilder builder) {
 		builder.add(ModBlocks.TELEPORTER, "Téléporteur point à point");
 		builder.add(ModItems.TUNER, "Syntoniseur de phase");
+		builder.add("cartography.pointportals.pair", "%s ↔ %s");
+		builder.add("cartography.pointportals.no_pairs", "Aucune paire de portails cartographiée.");
+		builder.add("cartography.pointportals.unnamed", "Portail (%s, %s, %s)");
 		builder.add("tooltip.pointportals.tuner_unbound", "Faites un clic droit sur un téléporteur non lié pour commencer l’association.");
 		builder.add("tooltip.pointportals.tuner_target", "Sélection : %s aux coordonnées [%s, %s, %s]");
 		builder.add("message.pointportals.first_portal_selected", "Premier portail sélectionné aux coordonnées [%s, %s, %s]. Sélectionnez le portail de destination.");

@@ -5,7 +5,10 @@
   "name": "Point Portals Visual Tests",
   "environment": "client",
   "entrypoints": {
-    "fabric-client-gametest": ["com.project.pointportals.client.PortalVisualTest"]
+    "fabric-client-gametest": [
+      "com.project.pointportals.client.PortalVisualTest",
+      "com.project.pointportals.client.cartography.PortalMapVisualTest"
+    ]
   },
   "depends": { "pointportals": "*" }
 }

@@ -1,5 +1,8 @@
 {
   "block.pointportals.teleporter": "Téléporteur point à point",
+  "cartography.pointportals.no_pairs": "Aucune paire de portails cartographiée.",
+  "cartography.pointportals.pair": "%s ↔ %s",
+  "cartography.pointportals.unnamed": "Portail (%s, %s, %s)",
   "item.pointportals.tuner": "Syntoniseur de phase",
   "message.pointportals.already_linked": "Ce portail est déjà lié à une autre destination.",
   "message.pointportals.cannot_self_link": "Impossible de relier un portail à lui-même !",
